@@ -226,11 +226,11 @@ install:
         cmake . -DBUILD_TESTS=ON  ${CMAKE_OPTIONS};
       fi
     - make -j2 test_jsoncons
-    - cd tests
-script:
     - if [[ "$JSONCONS_VALGRIND" == 1 ]]; then
         ctest -T memcheck;
       fi
+    - cd tests
+script:
     - if [[ "$CROSS_COMPILE" == 1 ]]; then
         if [[ "$ARM_ARCH_DIR" == "aarch64-linux-gnu" ]]; then
           qemu-aarch64 -L /usr/aarch64-linux-gnu/ ./test_jsoncons ;
