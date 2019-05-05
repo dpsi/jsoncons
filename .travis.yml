@@ -31,7 +31,9 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=gcc VERSION=5  CXXFLAGS="-std=gnu++11" 
+            - valgrind
+            - ninja-build
+      env: COMPILER=gcc VERSION=5  CXXFLAGS="-std=gnu++11" JSONCONS_VALGRIND=1
 
     - os: linux
       addons:
