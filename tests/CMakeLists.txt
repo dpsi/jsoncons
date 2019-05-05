@@ -22,12 +22,12 @@ OPTION(CROSS_COMPILE_ARM "cross compile for ARM targets" OFF)
 OPTION(JSONCONS_SANITIZE "sanitize" OFF)
 option(JSONCONS_VALGRIND "Execute tests with valgrind" OFF)
 
-if(JSONCONS_VALGRIND)
-    find_program(CMAKE_MEMORYCHECK_COMMAND valgrind)
-    message(STATUS "Executing test suite with Valgrind (${CMAKE_MEMORYCHECK_COMMAND})")
-    set(memcheck_command "${CMAKE_MEMORYCHECK_COMMAND} ${CMAKE_MEMORYCHECK_COMMAND_OPTIONS} --error-exitcode=1 --leak-check=full")
-    separate_arguments(memcheck_command)
-endif()
+# if(JSONCONS_VALGRIND)
+#    find_program(CMAKE_MEMORYCHECK_COMMAND valgrind)
+#    message(STATUS "Executing test suite with Valgrind (${CMAKE_MEMORYCHECK_COMMAND})")
+#    set(memcheck_command "${CMAKE_MEMORYCHECK_COMMAND} ${CMAKE_MEMORYCHECK_COMMAND_OPTIONS} --error-exitcode=1 --leak-check=full")
+#    separate_arguments(memcheck_command)
+# endif()
 
 include (CTest)
 
@@ -82,7 +82,7 @@ file(GLOB_RECURSE JSONCONS_TESTS_SOURCES ${JSONCONS_TESTS_SOURCE_DIR}/*.cpp)
 set(JSONCONS_TARGET test_jsoncons)
 add_executable(${JSONCONS_TARGET} EXCLUDE_FROM_ALL ${JSONCONS_TESTS_SOURCES} ${JSONCONS_HEADERS})
 
-add_test(jsoncons_test ${JSONCONS_TARGET})
+# add_test(jsoncons_test ${JSONCONS_TARGET})
 
 target_include_directories (${JSONCONS_TARGET} PUBLIC ${JSONCONS_INCLUDE_DIR}
                                            PUBLIC ${JSONCONS_THIRD_PARTY_INCLUDE_DIR})
