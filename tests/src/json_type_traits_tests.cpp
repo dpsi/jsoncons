@@ -30,7 +30,7 @@ struct json_type_traits<Json, own_vector> {
         return j;
     }
 };
-};
+}
 
 TEST_CASE("test_trait_type_erasure")
 {
@@ -131,11 +131,5 @@ TEST_CASE("test_byte_string_as_vector")
     CHECK('l' == bs[3]);
     CHECK('o' == bs[4]);
 }
-/*
-TEST_CASE("test_own_vector")
-{
-    jsoncons::json j = own_vector({0,9,8,7});
-    std::cout << j;
-}
-*/
+
 
