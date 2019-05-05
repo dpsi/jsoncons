@@ -33,7 +33,7 @@ matrix:
             - g++-5
             - valgrind
             - ninja-build
-      env: COMPILER=gcc VERSION=5  CXXFLAGS="-std=gnu++11" JSONCONS_VALGRIND=1
+      env: COMPILER=gcc VERSION=5  CXXFLAGS="-std=gnu++11" JSONCONS_VALGRIND=1 CMAKE_OPTIONS="-G Ninja -DCMAKE_BUILD_TYPE=Debug"
 
     - os: linux
       addons:
