@@ -12,7 +12,7 @@ matrix:
           packages:
             - g++-4.8
             - libgmp-dev
-      env: COMPILER=gcc VERSION=4.8 CXXFLAGS="-std=c++11" 
+      env: COMPILER=gcc VERSION=4.8 CXXFLAGS="-std=c++11" CMAKE_OPTIONS=""
 
     - os: linux
       addons:
