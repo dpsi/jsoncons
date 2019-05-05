@@ -10,7 +10,7 @@
 #include <ctime>
 #include <map>
 #include <assert.h>
-
+ 
 using namespace jsoncons;
 
 TEST_CASE("json sorted_unique_range_tag")
@@ -47,7 +47,7 @@ TEST_CASE("json sorted_unique_range_tag")
         CHECK(it->value().as<int>() == 6);
         CHECK((++it)->key() == std::string("g"));
         CHECK(it->value().as<int>() == 7);
-    } 
+    }
 
     SECTION("find")
     {
@@ -209,7 +209,6 @@ TEST_CASE("order preserving insert_or_assign")
         auto it = o.find("a");
         auto it2 = o.insert_or_assign(it,"d",3);
         CHECK_FALSE(it2 == o.end());
-
         auto it3 = o.begin();
         CHECK(it3->key() == std::string("b"));
         CHECK(it3->value().as<int>() == 1);
@@ -230,7 +229,6 @@ TEST_CASE("order preserving insert_or_assign")
     {
         REQUIRE(o.size() == 3);
 
-        auto it = o.find("a");
         o.try_emplace("d",7);
         o.try_emplace("d",8);
 
@@ -247,6 +245,7 @@ TEST_CASE("order preserving insert_or_assign")
 
     SECTION("try_emplace at pos")
     {
+        auto it = o.find("a");
         auto it2 = o.try_emplace(it,"d",7);
         o.try_emplace(it2, "d", 8);
 
