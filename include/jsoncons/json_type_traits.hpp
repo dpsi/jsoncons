@@ -1146,7 +1146,8 @@ namespace jsoncons \
             return j; \
         } \
     }; \
-} // jsoncons 
+} \
+/**/
  
 #define JSONCONS_MEMBER_TRAITS_DECL(ValueType,...) \
     JSONCONS_MEMBER_TRAITS_DECL_BASE(0, ValueType, __VA_ARGS__)
