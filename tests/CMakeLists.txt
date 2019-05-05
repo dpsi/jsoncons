@@ -7,7 +7,7 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(JSONCONS_INCLUDE_DIR ${jsoncons_INCLUDE_DIRS})
 endif ()
 
-message(STATUS "Forcing tests build type to Release")
+message(STATUS "Forcing tests build type to Debug")
 set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
 
 include(CheckCXXCompilerFlag)
@@ -28,8 +28,6 @@ option(JSONCONS_VALGRIND "Execute tests with valgrind" OFF)
 #    set(memcheck_command "${CMAKE_MEMORYCHECK_COMMAND} ${CMAKE_MEMORYCHECK_COMMAND_OPTIONS} --error-exitcode=1 --leak-check=full")
 #    separate_arguments(memcheck_command)
 # endif()
-
-include (CTest)
 
 # Note: to compile on ARM (or cross compile), you may need to add the following:
 # -DTARGET_ARCH="armv8-a -mfpu=neon -mfloat-abi=softfp -target arm-linux-gnueabi"
@@ -62,6 +60,7 @@ if(MSVC)
     set(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)
 endif()
 
+include (CTest)
 set(CTEST_OUTPUT_ON_FAILURE ON)
 
 set(JSONCONS_TESTS_DIR ${JSONCONS_PROJECT_DIR}/tests)
@@ -81,8 +80,7 @@ file(GLOB_RECURSE JSONCONS_TESTS_SOURCES ${JSONCONS_TESTS_SOURCE_DIR}/*.cpp)
 # )
 set(JSONCONS_TARGET test_jsoncons)
 add_executable(${JSONCONS_TARGET} EXCLUDE_FROM_ALL ${JSONCONS_TESTS_SOURCES} ${JSONCONS_HEADERS})
-
-# add_test(jsoncons_test ${JSONCONS_TARGET})
+add_test(test_jsoncons_mem ${JSONCONS_TARGET})
 
 target_include_directories (${JSONCONS_TARGET} PUBLIC ${JSONCONS_INCLUDE_DIR}
                                            PUBLIC ${JSONCONS_THIRD_PARTY_INCLUDE_DIR})
@@ -91,7 +89,13 @@ target_link_libraries(${JSONCONS_TARGET} Catch)
 
 if (CROSS_COMPILE_ARM)
     add_custom_target(jtest COMMAND qemu-arm -L /usr/arm-linux-gnueabi/ test_jsoncons DEPENDS ${JSONCONS_TARGET})
+elseif (JSONCONS_VALGRIND) 
+    add_custom_target(jtest
+        COMMAND ${CMAKE_CTEST_COMMAND} 
+            --force-new-ctest-process --test-action memcheck
+        COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
 else()
     add_custom_target(jtest COMMAND test_jsoncons DEPENDS ${JSONCONS_TARGET})
 endif()
+
 

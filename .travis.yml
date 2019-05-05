@@ -225,7 +225,7 @@ install:
       else
         cmake . -DBUILD_TESTS=ON  ${CMAKE_OPTIONS};
       fi
-    - make -j2 test_jsoncons
+    - make -j2 jtest
     - cd tests
 script:
     # - if [[ "$JSONCONS_VALGRIND" == 1 ]]; then
