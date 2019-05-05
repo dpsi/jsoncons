@@ -71,7 +71,7 @@ TEST_CASE("json insert(first,last) test")
         CHECK(it++->key() == "b");
         CHECK(it++->key() == "c");
     }
-    SECTION("move map into json")
+    /* SECTION("move map into json")
     {
         std::map<std::string,double> m1 = {{"a",1},{"b",2},{"c",3}};
         std::map<std::string,double> m2 = {{"d",4},{"e",5},{"f",6}};
@@ -90,7 +90,7 @@ TEST_CASE("json insert(first,last) test")
         CHECK(it++->key() == "d");
         CHECK(it++->key() == "e");
         CHECK(it++->key() == "f");
-    }
+    }*/
 }
 
 TEST_CASE("json as<T>")
