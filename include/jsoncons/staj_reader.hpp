@@ -353,7 +353,175 @@ private:
 
 };
 
+template <class CharT>
+class basic_staj_event_handler final : public basic_json_content_handler<CharT>
+{
+public:
+    using typename basic_json_content_handler<CharT>::string_view_type;
+private:
+    basic_staj_event<CharT> event_;
+public:
+    basic_staj_event_handler()
+        : event_(staj_event_type::null_value)
+    {
+    }
+
+    basic_staj_event_handler(staj_event_type event_type)
+        : event_(event_type)
+    {
+    }
+
+    const basic_staj_event<CharT>& event() const
+    {
+        return event_;
+    }
+private:
+
+    bool do_begin_object(semantic_tag, const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(staj_event_type::begin_object);
+        return false;
+    }
+
+    bool do_end_object(const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(staj_event_type::end_object);
+        return false;
+    }
+
+    bool do_begin_array(semantic_tag, const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(staj_event_type::begin_array);
+        return false;
+    }
+
+    bool do_end_array(const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(staj_event_type::end_array);
+        return false;
+    }
+
+    bool do_name(const string_view_type& name, const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(name.data(), name.length(), staj_event_type::name);
+        return false;
+    }
+
+    bool do_null_value(semantic_tag, const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(staj_event_type::null_value);
+        return false;
+    }
+
+    bool do_bool_value(bool value, semantic_tag, const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(value);
+        return false;
+    }
+
+    bool do_string_value(const string_view_type& s, semantic_tag tag, const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(s.data(), s.length(), staj_event_type::string_value, tag);
+        return false;
+    }
+
+    bool do_byte_string_value(const byte_string_view&, 
+                              semantic_tag,
+                              const ser_context&) override
+    {
+        JSONCONS_UNREACHABLE();
+    }
+
+    bool do_int64_value(int64_t value, 
+                        semantic_tag tag,
+                        const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(value, tag);
+        return false;
+    }
+
+    bool do_uint64_value(uint64_t value, 
+                         semantic_tag tag, 
+                         const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(value, tag);
+        return false;
+    }
+
+    bool do_double_value(double value, 
+                         semantic_tag tag, 
+                         const ser_context&) override
+    {
+        event_ = basic_staj_event<CharT>(value, tag);
+        return false;
+    }
+
+    void do_flush() override
+    {
+    }
+};
+
 template<class CharT>
+bool staj_to_saj_event(const basic_staj_event<CharT>& staj_ev,
+                       basic_json_content_handler<CharT>& handler,
+                       const ser_context& context)
+{
+    switch (staj_ev.event_type())
+    {
+        case staj_event_type::begin_array:
+            return handler.begin_array(semantic_tag::none, context);
+        case staj_event_type::end_array:
+            return handler.end_array(context);
+        case staj_event_type::begin_object:
+            return handler.begin_object(semantic_tag::none, context);
+        case staj_event_type::end_object:
+            return handler.end_object(context);
+        case staj_event_type::name:
+            return handler.name(staj_ev.template as<jsoncons::basic_string_view<CharT>>(), context);
+        case staj_event_type::string_value:
+            return handler.string_value(staj_ev.template as<jsoncons::basic_string_view<CharT>>(), semantic_tag::none, context);
+        case staj_event_type::null_value:
+            return handler.null_value(semantic_tag::none, context);
+        case staj_event_type::bool_value:
+            return handler.bool_value(staj_ev.template as<bool>(), semantic_tag::none, context);
+        case staj_event_type::int64_value:
+            return handler.int64_value(staj_ev.template as<int64_t>(), semantic_tag::none, context);
+        case staj_event_type::uint64_value:
+            return handler.uint64_value(staj_ev.template as<uint64_t>(), semantic_tag::none, context);
+        case staj_event_type::double_value:
+            return handler.double_value(staj_ev.template as<double>(), semantic_tag::none, context);
+        default:
+            return false;
+    }
+}
+
+// basic_staj_filter
+
+template<class CharT>
+class basic_staj_filter
+{
+public:
+
+    virtual ~basic_staj_filter() = default;
+
+    virtual bool accept(const basic_staj_event<CharT>& staj_ev, const ser_context& context) = 0;
+};
+
+// basic_default_staj_filter
+
+template<class CharT>
+class basic_default_staj_filter : public basic_staj_filter<CharT>
+{
+public:
+    bool accept(const basic_staj_event<CharT>&, const ser_context&) override
+    {
+        return true;
+    }
+};
+
+// basic_staj_reader
+
+ template<class CharT>
 class basic_staj_reader
 {
 public:
@@ -363,9 +531,9 @@ public:
 
     virtual const basic_staj_event<CharT>& current() const = 0;
 
-    virtual void accept(basic_json_content_handler<CharT>& handler) = 0;
+    virtual void read_to(basic_json_content_handler<CharT>& handler) = 0;
 
-    virtual void accept(basic_json_content_handler<CharT>& handler,
+    virtual void read_to(basic_json_content_handler<CharT>& handler,
                         std::error_code& ec) = 0;
 
     virtual void next() = 0;
@@ -373,26 +541,6 @@ public:
     virtual void next(std::error_code& ec) = 0;
 
     virtual const ser_context& context() const = 0;
-};
-
-template<class CharT>
-class basic_staj_filter
-{
-public:
-
-    virtual ~basic_staj_filter() = default;
-
-    virtual bool accept(const basic_staj_event<CharT>& event, const ser_context& context) = 0;
-};
-
-template<class CharT>
-class default_basic_staj_filter : public basic_staj_filter<CharT>
-{
-public:
-    bool accept(const basic_staj_event<CharT>&, const ser_context&) override
-    {
-        return true;
-    }
 };
 
 typedef basic_staj_event<char> staj_event;
