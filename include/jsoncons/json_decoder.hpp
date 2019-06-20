@@ -69,8 +69,8 @@ private:
 
     struct structure_info
     {
-        structure_type type_;
         size_t offset_;
+        structure_type type_;
     };
 
     typedef Allocator allocator_type;
