@@ -6,8 +6,8 @@
 #endif
 #include <jsoncons/json.hpp>
 #include <jsoncons/json_encoder.hpp>
-#include <jsoncons_ext/csv/csv_cursor.hpp>
-#include <jsoncons_ext/csv/csv.hpp>
+#include <jsoncons/csv/csv_cursor.hpp>
+#include <jsoncons/csv/csv.hpp>
 #include <catch/catch.hpp>
 #include <sstream>
 #include <vector>

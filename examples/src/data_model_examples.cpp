@@ -2,7 +2,7 @@
 // Distributed under Boost license
 
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 #include <iomanip>
 
 using namespace jsoncons;

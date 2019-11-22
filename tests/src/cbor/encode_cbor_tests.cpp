@@ -5,7 +5,7 @@
 #include "windows.h" // test no inadvertant macro expansions
 #endif
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 #include <sstream>
 #include <vector>
 #include <utility>

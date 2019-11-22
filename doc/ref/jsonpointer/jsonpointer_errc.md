@@ -1,7 +1,7 @@
 ### jsoncons::jsonpointer::jsonpointer_errc
 
 ```c++
-#include <jsoncons_ext/jsonpointer/jsonpointer_error.hpp>
+#include <jsoncons/jsonpointer/jsonpointer_error.hpp>
 ```
 
 The constant integer values scoped by `jsonpointer_errc` define the values for jsonpointer error codes.

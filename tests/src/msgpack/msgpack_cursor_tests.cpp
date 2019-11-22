@@ -6,8 +6,8 @@
 #endif
 #include <jsoncons/json.hpp>
 #include <jsoncons/json_encoder.hpp>
-#include <jsoncons_ext/msgpack/msgpack_cursor.hpp>
-#include <jsoncons_ext/msgpack/msgpack.hpp>
+#include <jsoncons/msgpack/msgpack_cursor.hpp>
+#include <jsoncons/msgpack/msgpack.hpp>
 #include <catch/catch.hpp>
 #include <sstream>
 #include <vector>

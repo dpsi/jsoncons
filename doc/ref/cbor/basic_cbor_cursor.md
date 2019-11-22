@@ -1,7 +1,7 @@
 ### jsoncons::cbor::basic_cbor_cursor
 
 ```c++
-#include <jsoncons_ext/cbor/cbor_cursor.hpp>
+#include <jsoncons/cbor/cbor_cursor.hpp>
 
 template<
     class Src=jsoncons::binary_stream_source,
@@ -112,7 +112,7 @@ Input JSON file `book_catalog.json`:
 #### Read CBOR parse events 
 
 ```c++
-#include <jsoncons_ext/cbor/cbor_cursor.hpp>
+#include <jsoncons/cbor/cbor_cursor.hpp>
 #include <string>
 #include <fstream>
 
@@ -209,7 +209,7 @@ end_array
 #### Filter CBOR parse events
 
 ```c++
-#include <jsoncons_ext/cbor/cbor_cursor.hpp>
+#include <jsoncons/cbor/cbor_cursor.hpp>
 #include <string>
 #include <fstream>
 
@@ -271,7 +271,7 @@ Graham Greene
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 #include <iostream>
 #include <iomanip>
 #include <cassert>
@@ -342,7 +342,7 @@ d8 56 58 20 00 00 00 00 00 00 24 40 00 00 00 00 00 00 34 40 00 00 00 00 00 00 3e
 This example is taken from [CBOR Tags for Typed Arrays](https://tools.ietf.org/html/draft-ietf-cbor-array-tags-08)
 
 ```c++
-#include <jsoncons_ext/cbor/cbor_cursor.hpp>
+#include <jsoncons/cbor/cbor_cursor.hpp>
 
 int main()
 {
@@ -411,7 +411,7 @@ end_array (n/a)
 This example is taken from [CBOR Tags for Typed Arrays](https://tools.ietf.org/html/draft-ietf-cbor-array-tags-08)
 
 ```c++
-#include <jsoncons_ext/cbor/cbor_cursor.hpp>
+#include <jsoncons/cbor/cbor_cursor.hpp>
 
 int main()
 {

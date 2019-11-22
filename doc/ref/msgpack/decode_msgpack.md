@@ -1,7 +1,7 @@
 ### jsoncons::msgpack::decode_msgpack
 
 ```c++
-#include <jsoncons_ext/msgpack/msgpack.hpp>
+#include <jsoncons/msgpack/msgpack.hpp>
 
 template<class T>
 T decode_msgpack(const std::vector<uint8_t>& v); // (1)

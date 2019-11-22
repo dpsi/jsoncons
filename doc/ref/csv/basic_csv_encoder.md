@@ -1,7 +1,7 @@
 ### jsoncons::csv::basic_csv_encoder
 
 ```c++
-#include <jsoncons_ext/csv/csv_encoder.hpp>
+#include <jsoncons/csv/csv_encoder.hpp>
 
 template<
     class CharT,
@@ -217,7 +217,7 @@ Dependable, trustworthy 75,000.00
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv_encoder.hpp>
+#include <jsoncons/csv/csv_encoder.hpp>
 
 using namespace jsoncons;
 

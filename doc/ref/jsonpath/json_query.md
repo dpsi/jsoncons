@@ -3,7 +3,7 @@
 Returns a `json` array of values or normalized path expressions selected from a root `json` structure.
 
 ```c++
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 enum class result_type {value,path};
 
@@ -84,7 +84,7 @@ The examples below use the JSON text from [Stefan Goessner's JSONPath](http://go
 
 ```c++    
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 #include <fstream>
 
 using namespace jsoncons;
@@ -243,7 +243,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 using namespace jsoncons;
 

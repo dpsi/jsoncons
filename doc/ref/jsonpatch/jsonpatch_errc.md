@@ -1,7 +1,7 @@
 ### jsoncons::jsonpatch::jsonpatch_errc
 
 ```c++
-#include <jsoncons_ext/jsonpatch/jsonpatch_error.hpp>
+#include <jsoncons/jsonpatch/jsonpatch_error.hpp>
 ```
 
 The constant integer values scoped by `jsonpatch_errc` define the values for jsonpatch error codes.

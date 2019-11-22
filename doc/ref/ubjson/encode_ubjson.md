@@ -3,7 +3,7 @@
 Encodes a C++ data structure to the [Universal Binary JSON Specification (UBJSON)](http://ubjsonspec.org/) data format.
 
 ```c++
-#include <jsoncons_ext/ubjson/ubjson.hpp>
+#include <jsoncons/ubjson/ubjson.hpp>
 
 template<class T>
 void encode_ubjson(const T& jval, std::vector<uint8_t>& v); // (1)

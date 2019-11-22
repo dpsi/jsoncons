@@ -3,9 +3,9 @@
 
 #include "sample_types.hpp"
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/ubjson/ubjson.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/ubjson/ubjson.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 #include <string>
 #include <iomanip>
 #include <cassert>

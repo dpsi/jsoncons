@@ -4,8 +4,8 @@
 #if defined(_MSC_VER)
 #include "windows.h" // test no inadvertant macro expansions
 #endif
-//#include <jsoncons_ext/csv/csv_options.hpp>
-#include <jsoncons_ext/csv/csv.hpp>
+//#include <jsoncons/csv/csv_options.hpp>
+#include <jsoncons/csv/csv.hpp>
 #include <jsoncons/json_reader.hpp>
 #include "../sample_allocators.hpp"
 #include <sstream>

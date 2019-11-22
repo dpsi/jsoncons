@@ -49,7 +49,7 @@ Input JSON file `book.json`:
 ```
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/msgpack/msgpack.hpp>
+#include <jsoncons/msgpack/msgpack.hpp>
 
 using namespace jsoncons;
 

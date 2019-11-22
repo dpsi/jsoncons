@@ -3,7 +3,7 @@
 Decodes a [comma-separated variables (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values) data format into a C++ data structure.
 
 ```c++
-#include <jsoncons_ext/csv/csv.hpp>
+#include <jsoncons/csv/csv.hpp>
 
 template <class T,class CharT>
 T decode_csv(const std::basic_string<CharT>& s, 
@@ -43,7 +43,7 @@ customer_name,has_coupon,phone_number,zip_code,sales_tax_rate,total_amount
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv_reader.hpp>
+#include <jsoncons/csv/csv_reader.hpp>
 #include <fstream>
 
 using namespace jsoncons;
@@ -131,7 +131,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv_reader.hpp>
+#include <jsoncons/csv/csv_reader.hpp>
 
 using namespace jsoncons;
 
@@ -172,7 +172,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv_reader.hpp>
+#include <jsoncons/csv/csv_reader.hpp>
 
 using namespace jsoncons;
 
@@ -252,7 +252,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv_reader.hpp>
+#include <jsoncons/csv/csv_reader.hpp>
 
 using namespace jsoncons;
 
@@ -339,7 +339,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv.hpp>
+#include <jsoncons/csv/csv.hpp>
 #include <iostream>
 
 using namespace jsoncons;

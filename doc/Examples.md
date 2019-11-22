@@ -2003,8 +2003,8 @@ double sale_price = j.get_with_default("sale_price", 22.0); // returns 22.0
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 int main()
 {
@@ -2160,7 +2160,7 @@ You can use [json_replace](ref/jsonpath/json_replace.md) in the `jsonpath` exten
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 using namespace jsoncons;
 

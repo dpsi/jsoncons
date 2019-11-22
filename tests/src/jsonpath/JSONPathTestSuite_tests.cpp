@@ -5,7 +5,7 @@
 #include "windows.h" // test no inadvertant macro expansions
 #endif
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 #include <iostream>
 #include <sstream>
 #include <vector>

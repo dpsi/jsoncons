@@ -6,8 +6,8 @@
 #endif
 #include <jsoncons/json.hpp>
 #include <jsoncons/json_encoder.hpp>
-#include <jsoncons_ext/ubjson/ubjson_cursor.hpp>
-#include <jsoncons_ext/ubjson/ubjson.hpp>
+#include <jsoncons/ubjson/ubjson_cursor.hpp>
+#include <jsoncons/ubjson/ubjson.hpp>
 #include <catch/catch.hpp>
 #include <sstream>
 #include <vector>

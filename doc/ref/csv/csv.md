@@ -22,7 +22,7 @@ For the examples below you need to include some header files and initialize a st
 #include <iomanip>
 #include <iostream>
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv.hpp>
+#include <jsoncons/csv/csv.hpp>
 
     const std::string data = R"(index_id,observation_date,rate
 EUR_LIBOR_06M,2015-10-23,0.0000214

@@ -3,7 +3,7 @@
 Decodes a [Binary JSON (BSON)](http://bsonspec.org/) data format into a C++ data structure.
 
 ```c++
-#include <jsoncons_ext/bson/bson.hpp>
+#include <jsoncons/bson/bson.hpp>
 
 template<class T>
 T decode_bson(const std::vector<uint8_t>& v); // (1)

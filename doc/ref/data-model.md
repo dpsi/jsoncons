@@ -70,7 +70,7 @@ CBOR data item|CBOR tag                                         | jsoncons data 
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 using namespace jsoncons;
 
@@ -148,7 +148,7 @@ Output
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 using namespace jsoncons;
 

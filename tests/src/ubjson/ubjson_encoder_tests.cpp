@@ -5,7 +5,7 @@
 #include "windows.h" // test no inadvertant macro expansions
 #endif
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/ubjson/ubjson.hpp>
+#include <jsoncons/ubjson/ubjson.hpp>
 #include <sstream>
 #include <vector>
 #include <utility>

@@ -3,7 +3,7 @@
 Searches for all values that match a JSONPath expression and replaces them with the specified value
 
 ```c++
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 template<class Json, class T>
 void json_replace(Json& root, 
@@ -62,7 +62,7 @@ Input JSON file `booklist.json`:
 ```
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 using namespace jsoncons;
 using namespace jsoncons::jsonpath;

@@ -5,8 +5,8 @@
 #include "windows.h"
 #endif
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
-#include <jsoncons_ext/cbor/cbor_reader.hpp>
+#include <jsoncons/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor_reader.hpp>
 #include <catch/catch.hpp>
 #include <sstream>
 #include <vector>

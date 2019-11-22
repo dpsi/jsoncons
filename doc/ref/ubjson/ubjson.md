@@ -38,8 +38,8 @@ For the examples below you need to include some header files and initialize a bu
 #include <iomanip>
 #include <iostream>
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/ubjson/ubjson.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/ubjson/ubjson.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 using namespace jsoncons; // for convenience
 
@@ -244,8 +244,8 @@ double_value: 23.8889 (n/a)
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/ubjson/ubjson.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/ubjson/ubjson.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 using namespace jsoncons;
 
@@ -323,7 +323,7 @@ Marilyn C, 0.9
 #include <cassert>
 #include <iostream>
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/ubjson/ubjson.hpp>
+#include <jsoncons/ubjson/ubjson.hpp>
 
 namespace ns {
 

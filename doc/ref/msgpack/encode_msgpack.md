@@ -3,7 +3,7 @@
 Encodes a C++ data structure into the [MessagePack](http://msgpack.org/index.html) data format.
 
 ```c++
-#include <jsoncons_ext/msgpack/msgpack.hpp>
+#include <jsoncons/msgpack/msgpack.hpp>
 
 template<class T>
 void encode_msgpack(const T& jval, std::vector<uint8_t>& v); // (1)
@@ -28,7 +28,7 @@ or support [json_type_traits](../json_type_traits.md).
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/msgpack/msgpack.hpp>
+#include <jsoncons/msgpack/msgpack.hpp>
 
 using namespace jsoncons;
 using namespace jsoncons::msgpack;

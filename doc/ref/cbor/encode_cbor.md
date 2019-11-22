@@ -1,7 +1,7 @@
 ### jsoncons::cbor::encode_cbor
 
 ```c++
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 template<class T>
 void encode_cbor(const T& val, std::vector<uint8_t>& buffer, 
@@ -32,7 +32,7 @@ supplied or defaults.
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 using namespace jsoncons;
 
@@ -106,7 +106,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 using namespace jsoncons;
 
@@ -140,7 +140,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 using namespace jsoncons;
 
@@ -179,7 +179,7 @@ data structure that contains many repeated strings more efficiently.
 #include <iomanip>
 #include <cassert>
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 using namespace jsoncons;
 

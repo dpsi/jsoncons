@@ -3,7 +3,7 @@
 Create a JSON Patch from a diff of two json documents.
 
 ```c++
-#include <jsoncons_ext/jsonpatch/jsonpatch.hpp>
+#include <jsoncons/jsonpatch/jsonpatch.hpp>
 
 template <class Json>
 Json from_diff(const Json& source, const Json& target)
@@ -19,7 +19,7 @@ Returns a JSON Patch.
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpatch/jsonpatch.hpp>
+#include <jsoncons/jsonpatch/jsonpatch.hpp>
 
 using namespace jsoncons::literals;
 namespace jp = jsoncons::jsonpatch;

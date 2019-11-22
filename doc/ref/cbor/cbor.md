@@ -114,8 +114,8 @@ For the examples below you need to include some header files and initialize a bu
 #include <iomanip>
 #include <iostream>
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/cbor/cbor.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 using namespace jsoncons; // for convenience
 
@@ -363,8 +363,8 @@ string_value: 1.23456789012345678901234567890 (bigdec)
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/cbor/cbor.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 using namespace jsoncons;
 
@@ -439,8 +439,8 @@ Marilyn C, 0.9
 ### Query CBOR with JSONPath
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/cbor/cbor.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 #include <iostream>
 #include <iomanip>
 #include <cassert>

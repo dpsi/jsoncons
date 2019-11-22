@@ -1,7 +1,7 @@
 ### jsoncons::bson::basic_bson_encoder
 
 ```c++
-#include <jsoncons_ext/bson/bson_encoder.hpp>
+#include <jsoncons/bson/bson_encoder.hpp>
 
 template<
     class Result>
@@ -229,7 +229,7 @@ Flushes whatever is buffered to the destination.
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/bson/bson.hpp>
+#include <jsoncons/bson/bson.hpp>
 #include <iomanip>
 
 int main()

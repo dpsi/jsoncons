@@ -3,7 +3,7 @@
 Adds a `json` value.
 
 ```c++
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 template<class J>
 void insert_or_assign(J& target, const typename J::string_view_type& path, const J& value); // (1)
@@ -36,7 +36,7 @@ None
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 namespace jp = jsoncons::jsonpointer;
 

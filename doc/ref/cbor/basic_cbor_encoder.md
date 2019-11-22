@@ -1,7 +1,7 @@
 ### jsoncons::cbor::basic_cbor_encoder
 
 ```c++
-#include <jsoncons_ext/cbor/cbor_encoder.hpp>
+#include <jsoncons/cbor/cbor_encoder.hpp>
 
 template<
     class Result,class Float128T = std::nullptr_t>
@@ -349,7 +349,7 @@ Flushes whatever is buffered to the destination.
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 #include <iomanip>
 
 int main()
@@ -399,7 +399,7 @@ Output:
 ```c++
 
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 #include <iomanip>
 
 int main()
@@ -447,7 +447,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 #include <iomanip>
 
 int main()
@@ -502,7 +502,7 @@ true 3555 0.333252
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
+#include <jsoncons/cbor/cbor.hpp>
 
 int main()
 {

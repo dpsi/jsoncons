@@ -1,7 +1,7 @@
 ### jsoncons::jsonpatch::apply_patch
 
 ```c++
-#include <jsoncons_ext/jsonpatch/jsonpatch.hpp>
+#include <jsoncons/jsonpatch/jsonpatch.hpp>
 
 template <class Json>
 void apply_patch(Json& target, const Json& patch); // (1)
@@ -28,7 +28,7 @@ None
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpatch/jsonpatch.hpp>
+#include <jsoncons/jsonpatch/jsonpatch.hpp>
 
 using namespace jsoncons::literals;
 namespace jp = jsoncons::jsonpatch;
@@ -64,7 +64,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpatch/jsonpatch.hpp>
+#include <jsoncons/jsonpatch/jsonpatch.hpp>
 
 using namespace jsoncons::literals;
 namespace jp = jsoncons::jsonpatch;

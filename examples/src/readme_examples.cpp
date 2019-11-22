@@ -3,10 +3,10 @@
 
 #include "sample_types.hpp"
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
-#include <jsoncons_ext/csv/csv.hpp>
+#include <jsoncons/cbor/cbor.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
+#include <jsoncons/csv/csv.hpp>
 #include <string>
 #include <vector>
 #include <iomanip>

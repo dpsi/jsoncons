@@ -2,7 +2,7 @@
 // Distributed under Boost license
 
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpatch/jsonpatch.hpp>
+#include <jsoncons/jsonpatch/jsonpatch.hpp>
 
 using namespace jsoncons;
 

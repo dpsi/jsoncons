@@ -75,7 +75,7 @@ It is also cross compiled for ARMv8-A architecture on Travis using clang and exe
 
 You can use the [vcpkg](https://github.com/Microsoft/vcpkg) platform library manager to install the [jsoncons package](https://github.com/microsoft/vcpkg/tree/master/ports/jsoncons).
 
-Or, download the [latest release](https://github.com/danielaparker/jsoncons/releases) and unpack the zip file. Copy the directory `include/jsoncons` to your `include` directory. If you wish to use extensions, copy `include/jsoncons_ext` as well. 
+Or, download the [latest release](https://github.com/danielaparker/jsoncons/releases) and unpack the zip file. Copy the directory `include/jsoncons` to your `include` directory. 
 
 Or, download the latest code on [master](https://github.com/danielaparker/jsoncons/archive/master.zip).
 
@@ -117,7 +117,7 @@ For the examples below you need to include some header files and initialize a st
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 #include <iostream>
 
 using namespace jsoncons; // for convenience
@@ -441,8 +441,8 @@ For the examples below you need to include some header files and initialize a bu
 #include <iomanip>
 #include <iostream>
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
-#include <jsoncons_ext/jsonpath/json_query.hpp>
+#include <jsoncons/cbor/cbor.hpp>
+#include <jsoncons/jsonpath/json_query.hpp>
 
 using namespace jsoncons; // for convenience
 
@@ -750,9 +750,9 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/cbor/cbor.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
-#include <jsoncons_ext/csv/csv.hpp>
+#include <jsoncons/cbor/cbor.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/csv/csv.hpp>
 
 // For convenience
 using namespace jsoncons;    

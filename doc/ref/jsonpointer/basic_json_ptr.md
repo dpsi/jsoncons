@@ -1,7 +1,7 @@
 ### jsoncons::jsonpointer::basic_json_ptr
 
 ```
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 template <class CharT>
 class basic_json_ptr
@@ -89,7 +89,7 @@ Performs stream output
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 namespace jp = jsoncons::jsonpointer;
 
@@ -123,7 +123,7 @@ author
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 namespace jp = jsoncons::jsonpointer;
 
@@ -160,7 +160,7 @@ m~n
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 namespace jp = jsoncons::jsonpointer;
 

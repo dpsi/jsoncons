@@ -2,7 +2,7 @@
 // Distributed under Boost license
 
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/csv/csv.hpp>
+#include <jsoncons/csv/csv.hpp>
 #include <fstream>
 #include <iomanip>
 #include <cassert>

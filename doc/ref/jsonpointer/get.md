@@ -3,7 +3,7 @@
 Selects a `json` value.
 
 ```c++
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 template<class J>
 typename std::enable_if<is_accessible_by_reference<J>::value,J&>::type
@@ -109,7 +109,7 @@ at(key)        |`reference` or `value_type`|
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 namespace jp = jsoncons::jsonpointer;
 
@@ -165,7 +165,7 @@ Output:
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 namespace jp = jsoncons::jsonpointer;
 
@@ -210,7 +210,7 @@ m~n
 
 ```c++
 #include <jsoncons/json.hpp>
-#include <jsoncons_ext/jsonpointer/jsonpointer.hpp>
+#include <jsoncons/jsonpointer/jsonpointer.hpp>
 
 namespace jp = jsoncons::jsonpointer;
 
