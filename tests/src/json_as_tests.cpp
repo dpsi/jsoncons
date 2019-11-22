@@ -14,7 +14,7 @@ TEST_CASE("json::is_object on proxy")
 {
     jsoncons::json root = jsoncons::json::parse(R"({"key":"value"})");
 
-    CHECK_FALSE(root["key1"].is_object());
+    CHECK(root["key1"].is_object());
 }
 
 TEST_CASE("json::as<jsoncons::string_view>()")

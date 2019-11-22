@@ -65,10 +65,11 @@ TEST_CASE("test_array_add")
 
 TEST_CASE("test_object_index")
 {
-    json b;
-    REQUIRE_THROWS_AS(b["key1"].as<std::string>(), std::out_of_range);
+    const json j;
+    REQUIRE_THROWS_AS(j["key1"].as<std::string>(), std::out_of_range);
 
+    json b;
     b["key1"] = "value1";
-    REQUIRE_THROWS_AS(b["key2"].as<std::string>(), std::out_of_range);
+    CHECK(b["key2"].is_object());
 }
 
