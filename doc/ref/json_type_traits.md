@@ -67,102 +67,118 @@ The `jsoncons` library provides a number of macros that can be used to generate 
 for a user-defined class.
 
 ```c++
-JSONCONS_MEMBER_TRAITS_DECL(class_name,
-                            member_name0,member_name1,...) // (1)
+JSONCONS_N_MEMBER_TRAITS_DECL(class_name,num_mandatory_params,
+                              member_name0,member_name1,...) // (1)
 
-JSONCONS_STRICT_MEMBER_TRAITS_DECL(class_name,
-                                   member_name0,member_name1,...) // (2)
+JSONCONS_ALL_MEMBER_TRAITS_DECL(class_name,
+                                member_name0,member_name1,...) // (2)
 
-JSONCONS_TPL_MEMBER_TRAITS_DECL(num_template_params,
-                                class_name,
-                                member_name0,member_name1,...) // (3)  
+JSONCONS_TPL_N_MEMBER_TRAITS_DECL(num_template_params,
+                                  class_name,num_mandatory_params,
+                                  member_name0,member_name1,...) // (3)  
 
-JSONCONS_TPL_STRICT_MEMBER_TRAITS_DECL(num_template_params,
-                                       class_name,
-                                       member_name0,member_name1,...) // (4)
+JSONCONS_TPL_ALL_MEMBER_TRAITS_DECL(num_template_params,
+                                    class_name,
+                                    member_name0,member_name1,...) // (4)
 
-JSONCONS_MEMBER_NAMED_TRAITS_DECL(class_name,
-                                  (member_name0,"name0"),
-                                  (member_name1,"name1")...) // (5)
+JSONCONS_N_MEMBER_NAMED_TRAITS_DECL(class_name,num_mandatory_params,
+                                    (member_name0,"name0"),
+                                    (member_name1,"name1")...) // (5)
 
-JSONCONS_STRICT_MEMBER_NAMED_TRAITS_DECL(class_name,
-                                         (member_name0,"name0"),
-                                         (member_name1,"name1")...) // (6)
-
-JSONCONS_TPL_MEMBER_NAMED_TRAITS_DECL(num_template_params,
-                                      class_name,
+JSONCONS_ALL_MEMBER_NAMED_TRAITS_DECL(class_name,
                                       (member_name0,"name0"),
-                                      (member_name1,"name1")...) // (7)
+                                      (member_name1,"name1")...) // (6)
 
-JSONCONS_TPL_STRICT_MEMBER_NAMED_TRAITS_DECL(num_template_params,
-                                             class_name,
-                                             (member_name0,"name0"),
-                                             (member_name1,"name1")...) // (8)
+JSONCONS_TPL_N_MEMBER_NAMED_TRAITS_DECL(num_template_params,
+                                        class_name,num_mandatory_params,
+                                        (member_name0,"name0"),
+                                        (member_name1,"name1")...) // (7)
+
+JSONCONS_TPL_ALL_MEMBER_NAMED_TRAITS_DECL(num_template_params,
+                                          class_name,
+                                          (member_name0,"name0"),
+                                          (member_name1,"name1")...) // (8)
 
 JSONCONS_ENUM_TRAITS_DECL(enum_name,
-                          identifier0,
-                          identifier1,...) // (9)
+                          identifier0,identifier1,...) // (9)
 
 JSONCONS_ENUM_NAMED_TRAITS_DECL(enum_name,
                                 (identifier0,"name0"),
                                 (identifier1,"name1")...) // (10)
 
-JSONCONS_GETTER_CTOR_TRAITS_DECL(class_name,
-                                 getter_name0,
-                                 getter_name1,...) // (11)
+JSONCONS_N_GETTER_CTOR_TRAITS_DECL(class_name,num_mandatory_params,
+                                   getter_name0,
+                                   getter_name1,...) // (11)
 
-JSONCONS_GETTER_CTOR_NAMED_TRAITS_DECL(class_name,
-                                      (getter_name0,"name0"),
-                                      (getter_name1,"name1")...) // (12)
+JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL(class_name,
+                                     getter_name0,getter_name1,...) // (12)
 
-JSONCONS_TPL_GETTER_CTOR_TRAITS_DECL(num_template_params,
-                                     class_name,
-                                     getter_name0,getter_name1,...) // (13)
+JSONCONS_TPL_N_GETTER_CTOR_TRAITS_DECL(num_template_params,
+                                       class_name,num_mandatory_params,
+                                       getter_name0,getter_name1,...) // (13)
 
-JSONCONS_TPL_GETTER_CTOR_NAMED_TRAITS_DECL(num_template_params,
-                                           class_name,
-                                           (getter_name0,"name0"),
-                                           (getter_name1,"name1")...) // (14)
+JSONCONS_TPL_ALL_GETTER_CTOR_TRAITS_DECL(num_template_params,
+                                         class_name,
+                                         getter_name0,getter_name1,...) // (14)
 
-JSONCONS_PROPERTY_TRAITS_DECL(class_name,get_prefix,set_prefix,
-                              property_name0,property_name1,...) // (15)
+JSONCONS_N_GETTER_CTOR_NAMED_TRAITS_DECL(class_name,num_mandatory_params,
+                                         (getter_name0,"name0"),
+                                         (getter_name1,"name1")...) // (15)
 
-JSONCONS_STRICT_PROPERTY_TRAITS_DECL(class_name,get_prefix,set_prefix,
-                                     property_name0,property_name1,...) // (16)
+JSONCONS_ALL_GETTER_CTOR_NAMED_TRAITS_DECL(class_name,
+                                          (getter_name0,"name0"),
+                                          (getter_name1,"name1")...) // (16)
 
-JSONCONS_TPL_PROPERTY_TRAITS_DECL(num_template_params,
-                                  class_name,get_prefix,set_prefix,
-                                  property_name0,property_name1,...) // (17)  
+JSONCONS_TPL_N_GETTER_CTOR_NAMED_TRAITS_DECL(num_template_params,
+                                             class_name,num_mandatory_params,
+                                             (getter_name0,"name0"),
+                                             (getter_name1,"name1")...) // (17)
 
-JSONCONS_TPL_STRICT_PROPERTY_TRAITS_DECL(num_template_params,
-                                         class_name,get_prefix,set_prefix,
-                                         property_name0,property_name1,...) // (18)
+JSONCONS_TPL_ALL_GETTER_CTOR_NAMED_TRAITS_DECL(num_template_params,
+                                               class_name,
+                                               (getter_name0,"name0"),
+                                               (getter_name1,"name1")...) // (18)
 
-JSONCONS_GETTER_SETTER_NAMED_TRAITS_DECL(class_name,
-                                         (getter_name0,setter_name0,"name0"),
-                                         (getter_name1,setter_name1,"name1")...) // (19)
+JSONCONS_N_PROPERTY_TRAITS_DECL(class_name,get_prefix,set_prefix,num_mandatory_params,
+                                property_name0,property_name1,...) // (19)
 
-JSONCONS_STRICT_GETTER_SETTER_NAMED_TRAITS_DECL(class_name,
-                                                (getter_name0,setter_name0,"name0"),
-                                                (getter_name1,setter_name1,"name1")...) // (20)
+JSONCONS_ALL_PROPERTY_TRAITS_DECL(class_name,get_prefix,set_prefix,
+                                  property_name0,property_name1,...) // (20)
 
-JSONCONS_TPL_GETTER_SETTER_NAMED_TRAITS_DECL(num_template_params,
-                                             class_name,
+JSONCONS_TPL_N_PROPERTY_TRAITS_DECL(num_template_params,
+                                    class_name,get_prefix,set_prefix,num_mandatory_params,
+                                    property_name0,property_name1,...) // (21)  
+
+JSONCONS_TPL_ALL_PROPERTY_TRAITS_DECL(num_template_params,
+                                      class_name,get_prefix,set_prefix,
+                                      property_name0,property_name1,...) // (22)
+
+JSONCONS_N_GETTER_SETTER_NAMED_TRAITS_DECL(class_name,num_mandatory_params,
+                                          (getter_name0,setter_name0,"name0"),
+                                          (getter_name1,setter_name1,"name1")...) // (23)
+
+JSONCONS_ALL_GETTER_SETTER_NAMED_TRAITS_DECL(class_name,
                                              (getter_name0,setter_name0,"name0"),
-                                             (getter_name1,setter_name1,"name1")...) // (21)
+                                             (getter_name1,setter_name1,"name1")...) // (24)
 
-JSONCONS_TPL_STRICT_GETTER_SETTER_NAMED_TRAITS_DECL(num_template_params,
-                                                    class_name,
-                                                    (getter_name0,setter_name0,"name0"),
-                                                    (getter_name1,setter_name1,"name1")...) // (22)
+JSONCONS_TPL_N_GETTER_SETTER_NAMED_TRAITS_DECL(num_template_params,
+                                               class_name,num_mandatory_params,
+                                               (getter_name0,setter_name0,"name0"),
+                                               (getter_name1,setter_name1,"name1")...) // (25)
 
-JSONCONS_POLYMORPHIC_TRAITS_DECL(base_class_name,derived_class_name0,derived_class_name1,...) // (23)
+JSONCONS_TPL_ALL_GETTER_SETTER_NAMED_TRAITS_DECL(num_template_params,
+                                                 class_name,
+                                                 (getter_name0,setter_name0,"name0"),
+                                                 (getter_name1,setter_name1,"name1")...) // (26)
+
+JSONCONS_POLYMORPHIC_TRAITS_DECL(base_class_name,derived_class_name0,derived_class_name1,...) // (27)
 ```
 
 (1)-(8) generate the code to specialize `json_type_traits` from the member data of a class. 
-(1)-(4) will serialize to the stringified member names, (5)-(8) will serialize to the given names. 
+(1)-(4) will serialize to the stringified member names, (5)-(8) will serialize to the provided names. 
 When decoding to a C++ data structure, 
-(1), (3), (5) and (7) allow member names not present in the JSON to have default values, while the strict (2), (4), (6) and (8) 
+(1), (3), (5) and (7) require that the first `num_mandatory_params` member names be present in the JSON,
+the rest can have default values. (2), (4), (6) and (8), however, 
 require that all member names be present in the JSON. The class must have a default constructor.
 If the member data or default constructor are private, the macro `JSONCONS_TYPE_TRAITS_FRIEND`
 will make them accessible to `json_type_traits`, used so
@@ -178,52 +194,57 @@ class MyClass
 (3)-(4) and (7)-(8) generate the code to specialize `json_type_traits` from the member data of a class template. 
 
 (9)-(10) generate the code to specialize `json_type_traits` from the identifiers of an enumeration.
-(9) will serialize to the stringified identifier names, (10) will serialize to the given names. 
+(9) will serialize to the stringified identifier names, (10) will serialize to the provided names. 
 
-(11)-(14) generate the code to specialize `json_type_traits` from the getter functions and a constructor of a class. 
-(11) and (13) will serialize to the stringified getter names, (12) and (14) will serialize to the given names. 
-When decoding to a C++ data strucure, all data members in the C++ object must be present in the JSON.
-The class must have a constructor such that the return types of the getter functions are convertible to
-its parameters, taken in order. 
-(13)-(14) generate the code to specialize `json_type_traits` from the getter functions and a constructor of a
+(11)-(18) generate the code to specialize `json_type_traits` from the getter functions and a constructor of a class. 
+(11)-(14) will serialize to the stringified getter names, (15)-(18) will serialize to the provided names. 
+When decoding to a C++ data structure, 
+(11), (13), (15) and (17) require that the first `num_mandatory_params` member names be present in the JSON,
+the rest can have default values. (12), (14), (16) and (18), however, 
+require that all member names be present in the JSON. The class must have a constructor such that the return types 
+of the getter functions are convertible to its parameters, taken in order. 
+(21)-(22) and (25)-(26) generate the code to specialize `json_type_traits` from the getter functions and a constructor of a
 class template.  
 
-(15)-(18) generate the code to specialize `json_type_traits` from the getter and setter functions of a
+(19)-(22) generate the code to specialize `json_type_traits` from the getter and setter functions of a
 class, and will serialize to the stringified property names. The getter and setter function names are
 formed from the concatenation of `get_prefix` and `set_prefix` with property name.
-(15) and (17) allow property names not present in the JSON to have default values, while the strict (16) and (18) 
-require that all property names be present in the JSON. (17)-(18) generate the code to specialize `json_type_traits` 
+(19) and (21) require that the first `num_mandatory_params` member names be present in the JSON,
+the rest can have default values. (20) and (22), however, 
+require that all member names be present in the JSON. (21)-(22) generate the code to specialize `json_type_traits` 
 from the getter and setter functions of a class template.
 
-(19)-(22) generate the code to specialize `json_type_traits` from the getter and setter functions of a
-class, and will serialize to the given names. When decoding to a C++ data structure, 
-(19) and (21) allow member names not present in the JSON to have default values, while the strict (20) and (22) 
+(23)-(26) generate the code to specialize `json_type_traits` from the getter and setter functions of a
+class, and will serialize to the provided names. When decoding to a C++ data structure, 
+(23) and (25) require that the first `num_mandatory_params` member names be present in the JSON,
+the rest can have default values. (24) and (26), however, 
 require that all member names be present in the JSON. The class must have a default constructor. 
-(21)-(22) generate the code to specialize `json_type_traits` from the getter and setter functions of a
+(25)-(26) generate the code to specialize `json_type_traits` from the getter and setter functions of a
 class template.
 
-(23) generates the code to specialize `json_type_traits` for `std::shared_ptr<base_class>` and `std::unique_ptr<base_class>`.
+(27) generates the code to specialize `json_type_traits` for `std::shared_ptr<base_class>` and `std::unique_ptr<base_class>`.
 Each derived class must have a `json_type_traits<Json,derived_class_name>` specialization.
 The type selection strategy is based on `json_type_traits<Json,derived_class_name>::is(const Json& j)`.
 In the case that `json_type_traits<Json,derived_class_name>` has been generated by one of the
-conveniences macros (1)-(18), the type selection strategy is based on the presence of properties
+conveniences macros (1)-(26), the type selection strategy is based on the presence of properties
 in the derived classes.
 
 #### Parameters
 
 `class_name` - the name of a class or struct  
-`enum_name` - the name of an enum type or enum class type
+`num_mandatory_params` - the number of mandatory class data members or accessors  
+`enum_name` - the name of an enum type or enum class type  
 `num_template_params` - for a class template, the number of template parameters  
 `member_nameN` - the name of a class data member. Class data members are normally modifiable, but may be `const` or
 `static const`, `const` or `static const` data members are one-way serialized.  
-`getter_nameN` - the getter for a class data member 
+`getter_nameN` - the getter for a class data member  
 `(identifierN,"nameN")` - an enum identifier and corresponding JSON name  
 `(getter_nameN,"nameN")` - the getter for a class data member and corresponding JSON name  
-`property_nameN` - the name of a class getter or setter stripped of its get or set prefix. 
-`(getter_nameN,setter_nameN,"nameN")` - the getter and setter for a class data member, and corresponding JSON name
-`base_class_name` - the name of a base class 
+`property_nameN` - the name of a class getter or setter stripped of its get or set prefix.  
+`(getter_nameN,setter_nameN,"nameN")` - the getter and setter for a class data member, and corresponding JSON name  
+`base_class_name` - the name of a base class  
 `derived_class_nameN` - a class that is derived from the base class,
-and that has a `json_type_traits<Json,derived_class_nameN>` specialization.
+and that has a `json_type_traits<Json,derived_class_nameN>` specialization.  
 
 These macro declarations must be placed at global scope, outside any namespace blocks, and `class_name`, 
 `base_class_name` and `derived_class_nameN` must be a fully namespace qualified names.
@@ -235,7 +256,7 @@ These macro declarations must be placed at global scope, outside any namespace b
 [Convert from and to std::tuple](#A3)  
 [Extend json_type_traits to support `boost::gregorian` dates.](#A4)  
 [Specialize json_type_traits to support a book class.](#A5)  
-[Using JSONCONS_MEMBER_TRAITS_DECL to generate the json_type_traits](#A6)  
+[Using JSONCONS_N_MEMBER_TRAITS_DECL to generate the json_type_traits](#A6)  
 [Serialize a polymorphic type based on the presence of properties](#A7)  
 [Ensuring type selection is possible](#A8)  
 [Specialize json_type_traits for a container type that the jsoncons library also supports](#A9)  
@@ -426,7 +447,7 @@ To save typing and enhance readability, the jsoncons library defines macros,
 so you could also write
 
 ```c++
-JSONCONS_MEMBER_TRAITS_DECL(ns::book, author, title, price)
+JSONCONS_N_MEMBER_TRAITS_DECL(ns::book, author, title, price)
 ```
 
 which expands to the code above.
@@ -489,9 +510,9 @@ Charles Bukowski, Pulp, 22.48
 
 <div id="A6"/> 
 
-#### Using JSONCONS_MEMBER_TRAITS_DECL to generate the json_type_traits 
+#### Using JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL to generate the json_type_traits 
 
-`JSONCONS_MEMBER_TRAITS_DECL` is a macro that can be used to generate the `json_type_traits` boilerplate
+`JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL` is a macro that can be used to generate the `json_type_traits` boilerplate
 for your own types.
 
 ```c++
@@ -565,8 +586,8 @@ using namespace jsoncons; // for convenience
 
 // Declare the traits. Specify which data members need to be serialized.
 JSONCONS_ENUM_TRAITS_DECL(ns::hiking_experience, beginner, intermediate, advanced)
-JSONCONS_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputon, rater, assertion, rated, rating)
-JSONCONS_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputation, application, reputons)
+JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputon, rater, assertion, rated, rating)
+JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputation, application, reputons)
 
 int main()
 {
@@ -600,7 +621,7 @@ Output:
 
 #### Serialize a polymorphic type based on the presence of properties
 
-This example uses the convenience macro `JSONCONS_GETTER_CTOR_TRAITS_DECL`
+This example uses the convenience macro `JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL`
 to generate the `json_type_traits` boilerplate for the `HourlyEmployee` and `CommissionedEmployee` 
 derived classes, and `JSONCONS_POLYMORPHIC_TRAITS_DECL` to generate the `json_type_traits` boilerplate
 for `std::shared_ptr<Employee>` and `std::unique_ptr<Employee>`. The type selection strategy is based
@@ -700,8 +721,8 @@ public:
 
 } // ns
 
-JSONCONS_GETTER_CTOR_TRAITS_DECL(ns::HourlyEmployee, firstName, lastName, wage, hours)
-JSONCONS_GETTER_CTOR_TRAITS_DECL(ns::CommissionedEmployee, firstName, lastName, baseSalary, commission, sales)
+JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL(ns::HourlyEmployee, firstName, lastName, wage, hours)
+JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL(ns::CommissionedEmployee, firstName, lastName, baseSalary, commission, sales)
 JSONCONS_POLYMORPHIC_TRAITS_DECL(ns::Employee, ns::HourlyEmployee, ns::CommissionedEmployee)
 
 int main()
@@ -793,10 +814,10 @@ example above, the type selection strategy is based
 on the presence of properties in the derived classes. If
 derived classes cannot be distinguished in this way, 
 you can introduce extra properties. The convenience
-macros `JSONCONS_MEMBER_TRAITS_DECL`, `JSONCONS_STRICT_MEMBER_TRAITS_DECL`,
-`JSONCONS_TPL_MEMBER_TRAITS_DECL`, `JSONCONS_TPL_STRICT_MEMBER_TRAITS_DECL`,
-`JSONCONS_MEMBER_TRAITS_NAMED_DECL`, `JSONCONS_STRICT_MEMBER_TRAITS_NAMED_DECL`,
-`JSONCONS_TPL_MEMBER_TRAITS_NAMED_DECL`, and `JSONCONS_TPL_STRICT_MEMBER_TRAITS_NAMED_DECL`
+macros `JSONCONS_N_MEMBER_TRAITS_DECL`, `JSONCONS_ALL_MEMBER_TRAITS_DECL`,
+`JSONCONS_TPL_N_MEMBER_TRAITS_DECL`, `JSONCONS_TPL_ALL_MEMBER_TRAITS_DECL`,
+`JSONCONS_N_MEMBER_TRAITS_NAMED_DECL`, `JSONCONS_ALL_MEMBER_TRAITS_NAMED_DECL`,
+`JSONCONS_TPL_N_MEMBER_TRAITS_NAMED_DECL`, and `JSONCONS_TPL_ALL_MEMBER_TRAITS_NAMED_DECL`
 allow you to have `const` or `static const` data members that are serialized and that 
 particpate in the type selection strategy during deserialization. 
 
@@ -823,8 +844,8 @@ class Baz : public Foo
 
 } // ns
 
-JSONCONS_MEMBER_TRAITS_DECL(ns::Bar,bar)
-JSONCONS_MEMBER_TRAITS_DECL(ns::Baz,baz)
+JSONCONS_N_MEMBER_TRAITS_DECL(ns::Bar,1,bar)
+JSONCONS_N_MEMBER_TRAITS_DECL(ns::Baz,1,baz)
 JSONCONS_POLYMORPHIC_TRAITS_DECL(ns::Foo, ns::Bar, ns::Baz)
 
 int main()
