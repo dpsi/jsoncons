@@ -259,8 +259,8 @@ namespace ns {
 // Declare the traits. Specify which data members need to be serialized.
 
 JSONCONS_ENUM_TRAITS_DECL(ns::hiking_experience, beginner, intermediate, advanced)
-JSONCONS_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputon, rater, assertion, rated, rating)
-JSONCONS_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputation, application, reputons)
+JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputon, rater, assertion, rated, rating)
+JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL(ns::hiking_reputation, application, reputons)
 
 int main()
 {
@@ -299,12 +299,12 @@ Marilyn C, 0.9
 }
 ```
 This example makes use of the convenience macros `JSONCONS_ENUM_TRAITS_DECL`
-and `JSONCONS_GETTER_CTOR_TRAITS_DECL` to specialize the 
+and `JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL` to specialize the 
 [json_type_traits](doc/ref/json_type_traits.md) for the enum type
 `ns::hiking_experience` and the classes `ns::hiking_reputon` and 
 `ns::hiking_reputation`.
 The macro `JSONCONS_ENUM_TRAITS_DECL` generates the code from
-the enum values, and the macro `JSONCONS_GETTER_CTOR_TRAITS_DECL` 
+the enum values, and the macro `JSONCONS_ALL_GETTER_CTOR_TRAITS_DECL` 
 generates the code from the getter functions and a constructor. 
 These macro declarations must be placed outside any namespace blocks.
 
@@ -833,7 +833,7 @@ int main()
     json& ref = jsonpointer::get(j, "/1/2");
     std::cout << "(7) " << ref.as<std::string>() << "\n\n";
 
-#if (defined(__GNUC__) || defined(__clang__)) && (!defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_INT128))
+#if (defined(__GNUC__) || defined(__clang__)) && (!defined(__ALL_ANSI__) && defined(_GLIBCXX_USE_INT128))
     // e.g. if code compiled with GCC and std=gnu++11 (rather than std=c++11)
     __int128 i = j[1][2].as<__int128>();
 #endif
@@ -959,7 +959,7 @@ A big thanks to Milo Yip, author of [RapidJSON](http://rapidjson.org/), for rais
 
 The jsoncons implementation of the Grisu3 algorithm for printing floating-point numbers follows Florian Loitsch's MIT licensed [grisu3_59_56 implementation](http://florian.loitsch.com/publications), with minor modifications. 
 
-The macro `JSONCONS_MEMBER_TRAITS_DECL` was inspired by Martin York's [ThorsSerializer](https://github.com/Loki-Astari/ThorsSerializer)
+The macro `JSONCONS_ALL_MEMBER_TRAITS_DECL` was inspired by Martin York's [ThorsSerializer](https://github.com/Loki-Astari/ThorsSerializer)
 
 jsoncons includes [Martin Moene's span-lite](https://github.com/martinmoene/span-lite) - a C++20-like span - distributed under the Boost Software License, Version 1.0. 
 
