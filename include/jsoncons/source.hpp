@@ -89,9 +89,12 @@ public:
 
     stream_source& operator=(stream_source&& other) noexcept
     {
-        std::swap(is_,other.is_);
-        std::swap(sbuf_,other.sbuf_);
-        std::swap(position_,other.position_);
+        if (this != &other)
+        {
+            std::swap(is_,other.is_);
+            std::swap(sbuf_,other.sbuf_);
+            std::swap(position_,other.position_);
+        }
         return *this;
     }
 
@@ -301,10 +304,13 @@ public:
 
     string_source& operator=(string_source&& val)
     {
-        std::swap(data_,val.data_);
-        std::swap(input_ptr_,val.input_ptr_);
-        std::swap(input_end_,val.input_end_);
-        std::swap(eof_,val.eof_);
+        if (this != &val)
+        {
+            std::swap(data_,val.data_);
+            std::swap(input_ptr_,val.input_ptr_);
+            std::swap(input_end_,val.input_end_);
+            std::swap(eof_,val.eof_);
+        }
         return *this;
     }
 
@@ -451,9 +457,12 @@ public:
 
     bin_stream_source& operator=(bin_stream_source&& other) noexcept
     {
-        std::swap(is_,other.is_);
-        std::swap(sbuf_,other.sbuf_);
-        std::swap(position_,other.position_);
+        if (this != &other)
+        {
+            std::swap(is_,other.is_);
+            std::swap(sbuf_,other.sbuf_);
+            std::swap(position_,other.position_);
+        }
         return *this;
     }
 
