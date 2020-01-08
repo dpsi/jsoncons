@@ -202,7 +202,7 @@ struct has_data_and_size
 > : std::true_type{};
 #else
 template<class T, class Enable=void>
-struct has_data_and_size : std::true_type{};
+struct has_data_and_size : std::false_type{};
 
 template<class C>
 struct has_data_and_size
