@@ -202,14 +202,8 @@ struct has_data_and_size
 > : std::true_type{};
 #else
 template<class T, class Enable=void>
-struct has_data_and_size : std::false_type{};
+struct has_data_and_size : std::true_type{};
 
-template<class C>
-struct has_data_and_size
-<
-    C, 
-    typename std::enable_if<!std::is_void<decltype(std::declval<C>().data())>::value>::type
-> : std::true_type{};
 #endif
 
 // has_reserve
