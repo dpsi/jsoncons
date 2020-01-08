@@ -60,7 +60,21 @@ namespace detail
 
         template <typename C>
         span(C& c,
-             typename std::enable_if<!is_span<C>::value && !is_std_array<C>::value && is_compatible_element<C,element_type>::value && has_data_and_size<C>::value>::type* = 0)
+             typename std::enable_if<!is_span<C>::value && 
+                                     !is_std_array<C>::value && 
+                                     is_compatible_element<C,element_type>::value && 
+                                     has_data_and_size<C>::value>::type* = 0)
+            : data_(c.data()), size_(c.size())
+        {
+        }
+
+        template <typename C>
+        constexpr span(const C& c,
+                       typename std::enable_if<!is_span<C>::value && 
+                                               !is_std_array<C>::value &&
+                                               std::is_const< element_type >::value &&
+                                               is_compatible_element<C,element_type>::value && 
+                                               has_data_and_size<C>::value>::type* = 0)
             : data_(c.data()), size_(c.size())
         {
         }
@@ -82,13 +96,6 @@ namespace detail
         span(const std::array<value_type, N>& arr,
              typename std::enable_if<(extent == dynamic_extent || extent == N)>::type* = 0) noexcept
             : data_(arr.data()), size_(arr.size())
-        {
-        }
-
-        template <typename C>
-        constexpr span(const C& c,
-                       typename std::enable_if<!is_span<C>::value && !is_std_array<C>::value && is_compatible_element<C,element_type>::value && has_data_and_size<C>::value>::type* = 0)
-            : data_(c.data()), size_(c.size())
         {
         }
 

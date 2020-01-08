@@ -189,7 +189,7 @@ struct is_constructible_from_const_pointer_and_size<T,
     : std::true_type {};
 
 // has_size_and_data
-
+#if !(defined(_MSC_VER) && _MSC_VER <= 1900)
 template<class T, class Enable=void>
 struct has_data_and_size : std::false_type{};
 
@@ -200,6 +200,10 @@ struct has_data_and_size
     typename std::enable_if<!std::is_void<decltype(std::declval<C>().size())>::value &&
                             !std::is_void<decltype(std::declval<C>().data())>::value>::type
 > : std::true_type{};
+#else
+template<class T, class Enable=void>
+struct has_data_and_size : std::true_type{};
+#endif
 
 // has_reserve
 
