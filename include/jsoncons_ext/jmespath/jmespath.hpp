@@ -168,11 +168,27 @@ public:
 
     class selector_base
     {
+        int level_;
         bool expression_type_;
     public:
-        selector_base()
-            : expression_type_(false)
+        selector_base(int level)
+            : level_(level), expression_type_(false)
         {
+        }
+
+        int level() const
+        {
+            return level_;
+        }
+
+        virtual bool is_lbracket() const
+        {
+            return false;
+        }
+
+        virtual bool is_rbracket() const
+        {
+            return false;
         }
 
         bool expression_type() const
@@ -208,7 +224,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> selectors_;
 
         sub_expression(std::unique_ptr<selector_base>&& selector)
-            : lhs_selector_(std::move(selector))
+            : selector_base(2), lhs_selector_(std::move(selector))
         {
         }
 
@@ -354,7 +370,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> selectors_;
     public:
         function_selector(function_type& f)
-            : f_(f)
+            : selector_base(1), f_(f)
         {
         }
 
@@ -377,6 +393,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> selectors_;
 
         expression_selector()
+            : selector_base(2)
         {
         }
 
@@ -418,7 +435,7 @@ public:
 
         name_expression_selector(std::basic_string<char_type>&& name,
                                  std::unique_ptr<selector_base>&& selector)
-            : name_(std::move(name), selector_(std::move(selector)))
+            : selector_base(1), name_(std::move(name), selector_(std::move(selector)))
         {
         }
 
@@ -441,6 +458,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
 
         list_projection_selector(std::unique_ptr<selector_base>&& lhs_selector)
+            : selector_base(2)
         {
             lhs_selector_ = std::move(lhs_selector);
         }
@@ -498,6 +516,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
 
         list_projection()
+            : selector_base(2)
         {
         }
 
@@ -512,6 +531,7 @@ public:
             {
                 return Json::null();
             }
+            std::cout << "list projection val: \n" << pretty_print(val) << "\n";
 
             auto resultp = context.create_new(json_array_arg);
             for (reference item : val.array_range())
@@ -531,8 +551,9 @@ public:
 
         string_type to_string() const override
         {
-            string_type s("list_projection2\n");
-            s.append("rhs\n");
+            string_type s("list_projection ");
+            s.append(std::to_string(rhs_selectors_.size()));
+            s.append("\n");
             for (auto& selector : rhs_selectors_)
             {
                 s.append("    ");
@@ -550,7 +571,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
 
         pipe_selector(std::unique_ptr<selector_base>&& lhs_selector)
-            : lhs_selector_(std::move(lhs_selector))
+            : selector_base(2), lhs_selector_(std::move(lhs_selector))
         {
         }
 
@@ -583,7 +604,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
 
         flatten_selector(std::unique_ptr<selector_base>&& lhs_selector)
-            : lhs_selector_(std::move(lhs_selector)) 
+            : selector_base(2), lhs_selector_(std::move(lhs_selector)) 
         {
         }
 
@@ -654,6 +675,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
 
         flatten_projection()
+            : selector_base(2)
         {
         }
 
@@ -669,7 +691,7 @@ public:
                 return Json::null();
             }
 
-            std::cout << "flatten projection 1 " << pretty_print(val) << "\n";
+            std::cout << "flatten projection 1:\n" << pretty_print(val) << "\n";
 
             auto currentp = context.create_new(json_array_arg);
             for (reference item : val.array_range())
@@ -687,7 +709,7 @@ public:
                 }
             }
 
-            std::cout << "flatten projection 2: " << pretty_print(*currentp) << "\n";
+            std::cout << "flatten projection 2:\n" << pretty_print(*currentp) << "\n";
 
             auto resultp = context.create_new(json_array_arg);
             for (reference item : currentp->array_range())
@@ -709,7 +731,9 @@ public:
 
         string_type to_string() const override
         {
-            string_type s("flatten_projection\n");
+            string_type s("flatten_projection ");
+            s.append(std::to_string(rhs_selectors_.size()));
+            s.append("\n");
             for (auto& selector : rhs_selectors_)
             {
                 s.append("    ");
@@ -727,6 +751,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
 
         object_projection_selector(std::unique_ptr<selector_base>&& lhs_selector)
+            : selector_base(1)
         {
             lhs_selector_ = std::move(lhs_selector);
         }
@@ -767,6 +792,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
 
         object_projection()
+            : selector_base(2)
         {
         }
 
@@ -805,7 +831,7 @@ public:
         string_type identifier_;
     public:
         identifier_selector(const string_view_type& name)
-            : identifier_(name)
+            : selector_base(1), identifier_(name)
         {
         }
 
@@ -841,11 +867,11 @@ public:
         Json j_;
     public:
         json_value_selector(const Json& j)
-            : j_(j)
+            : selector_base(1), j_(j)
         {
         }
         json_value_selector(Json&& j)
-            : j_(std::move(j))
+            : selector_base(1), j_(std::move(j))
         {
         }
 
@@ -866,7 +892,7 @@ public:
         int64_t index_;
     public:
         index_selector(int64_t index)
-            : index_(index)
+            : selector_base(1), index_(index)
         {
         }
 
@@ -907,7 +933,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
     public:
         slice_selector(std::unique_ptr<selector_base>&& lhs_selector, const slice& a_slice)
-            : lhs_selector_(std::move(lhs_selector)), slice_(a_slice)
+            : selector_base(1), lhs_selector_(std::move(lhs_selector)), slice_(a_slice)
         {
         }
 
@@ -970,7 +996,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> rhs_selectors_;
     public:
         slice_projection(const slice& a_slice)
-            : slice_(a_slice)
+            : selector_base(2), slice_(a_slice)
         {
         }
 
@@ -1082,6 +1108,7 @@ public:
         Comparator cmp_;
 
         filter_selector(std::unique_ptr<selector_base>&& lhs_selector)
+            : selector_base(1) 
         {
             lhs_selector_ = std::move(lhs_selector);
         }
@@ -1124,7 +1151,7 @@ public:
         std::vector<std::unique_ptr<selector_base>> selectors_;
 
         multi_select_list_selector(std::vector<std::unique_ptr<selector_base>>&& selectors)
-            : selectors_(std::move(selectors))
+            : selector_base(1), selectors_(std::move(selectors))
         {
         }
 
@@ -1176,7 +1203,7 @@ public:
         std::vector<key_selector> key_selectors_;
 
         multi_select_hash_selector(std::vector<key_selector>&& key_selectors)
-            : key_selectors_(std::move(key_selectors))
+            : selector_base(1), key_selectors_(std::move(key_selectors))
         {
         }
 
@@ -1211,6 +1238,7 @@ public:
     std::vector<std::size_t> structure_offset_stack_;
     std::vector<key_selector> key_selector_stack_;
     std::vector<key_selector> output_stack_;
+    std::vector<key_selector> operator_stack_;
     std::vector<std::size_t> offset_stack_;
     jmespath_context context_;
 
@@ -2132,7 +2160,39 @@ public:
         state_stack_.pop_back();
 
         //reference r = key_selector_stack_.back().selector->evaluate(context_, root, ec);
-        while (!offset_stack_.empty())
+
+        std::cout << "Stack:\n";
+        for (auto& item : output_stack_)
+        {
+            std::cout << item.selector->to_string() << "\n";
+        }
+        std::cout << "\n";
+
+        std::vector<std::unique_ptr<selector_base>> stack;
+        for (size_t i = 0; i < output_stack_.size(); ++i)
+        {
+            auto p = std::move(output_stack_[i].selector);
+            if (stack.empty())
+            {
+                stack.emplace_back(std::move(p));
+            }
+            else if (p->level() < stack.back()->level())
+            {
+                stack.back()->add_selector(std::move(p));
+            }
+            else 
+            {
+                stack.emplace_back(std::move(p));
+            }
+        }
+
+        expression_selector expr;
+        for (auto& item : stack)
+        {
+            expr.add_selector(std::move(item));
+        }
+
+        /*while (!offset_stack_.empty())
         {
             const size_t pos = offset_stack_.back();
             for (size_t i = pos + 1; i < output_stack_.size(); ++i)
@@ -2143,7 +2203,10 @@ public:
             offset_stack_.pop_back();
         }
         std::cout << "\n" << output_stack_[0].selector->to_string() << "\n";
-        return output_stack_[0].selector->evaluate(context_, root, ec);
+        return expr.evaluate(context_, root, ec);*/
+        std::cout << "\n" << expr.to_string() << "\n";
+        return expr.evaluate(context_, root, ec);
+
     }
 
     void advance_past_space_character()

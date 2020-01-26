@@ -88,7 +88,6 @@ TEST_CASE("jmespath-tests")
 
 using jmespath::detail::jmespath_evaluator;
 
-
 TEST_CASE("jmespath expressions")
 {
     std::string input = R"(
@@ -120,35 +119,44 @@ TEST_CASE("jmespath expressions")
         std::cout << pretty_print(result3) << "\n";
     }
 */
-    SECTION("reservations[].instances[].state2")
+    SECTION("reservations[*].instances[*].state")
     {
         auto reservations = std::make_unique<jmespath_evaluator<json,const json&>::identifier_selector>("reservations");
         auto instances = std::make_unique<jmespath_evaluator<json,const json&>::identifier_selector>("instances");
         auto state = std::make_unique<jmespath_evaluator<json, const json&>::identifier_selector>("state");
 
         auto sub_expr1 = std::make_unique<jmespath_evaluator<json, const json&>::sub_expression>(std::move(reservations));
-        auto lp_instances = std::make_unique<jmespath_evaluator<json, const json&>::flatten_projection>();
-        auto lp_instances2 = std::make_unique<jmespath_evaluator<json, const json&>::flatten_projection>();
 
-        sub_expr1->add_selector(std::move(lp_instances));
-        sub_expr1->add_selector(std::move(instances));
-        sub_expr1->add_selector(std::move(lp_instances2));
-        sub_expr1->add_selector(std::move(state));
+        auto flatten_proj = std::make_unique<jmespath_evaluator<json, const json&>::list_projection>();
+        auto flatten_proj2 = std::make_unique<jmespath_evaluator<json, const json&>::list_projection>();
 
-        //auto lp_instances2 = std::make_unique<jmespath_evaluator<json, const json&>::flatten_projection>();
-        //sub_expr1->add_selector(std::move(lp_instances));
 
-        // list projection lp_state must receive as input [[{"state": "running"},{"state": "stopped"}],[{"state": "terminated"},{"state": "runnning"}]]
-        /* auto lp_state = std::make_unique<jmespath_evaluator<json, const json&>::flatten_projection>();
-        lp_state->add_selector(std::move(state));
+        flatten_proj->add_selector(std::move(instances));
+        flatten_proj2->add_selector(std::move(state));
+        sub_expr1->add_selector(std::move(flatten_proj));
+        sub_expr1->add_selector(std::move(flatten_proj2));
 
-        auto sub_expr2 = std::make_unique<jmespath_evaluator<json, const json&>::sub_expression>(std::move(instances));
-        sub_expr2->add_selector(std::move(lp_state));
+        std::cout << "\n" << sub_expr1->to_string() << "\n\n";
 
-        lp_instances->add_selector(std::move(sub_expr2));
-*/
+        auto& result1 = sub_expr1->evaluate(context, root, ec);
+        std::cout << pretty_print(result1) << "\n";
+    }
+    SECTION("reservations[].instances[].state")
+    {
+        auto reservations = std::make_unique<jmespath_evaluator<json,const json&>::identifier_selector>("reservations");
+        auto instances = std::make_unique<jmespath_evaluator<json,const json&>::identifier_selector>("instances");
+        auto state = std::make_unique<jmespath_evaluator<json, const json&>::identifier_selector>("state");
 
-        //sub_expr1->add_selector(std::move(lp_instances));
+        auto sub_expr1 = std::make_unique<jmespath_evaluator<json, const json&>::sub_expression>(std::move(reservations));
+
+        auto flatten_proj = std::make_unique<jmespath_evaluator<json, const json&>::flatten_projection>();
+        auto flatten_proj2 = std::make_unique<jmespath_evaluator<json, const json&>::flatten_projection>();
+
+
+        flatten_proj->add_selector(std::move(instances));
+        flatten_proj2->add_selector(std::move(state));
+        sub_expr1->add_selector(std::move(flatten_proj));
+        sub_expr1->add_selector(std::move(flatten_proj2));
 
         std::cout << "\n" << sub_expr1->to_string() << "\n\n";
 
