@@ -181,6 +181,11 @@ public:
             return level_;
         }
 
+        virtual bool flaten() const
+        {
+            return false;
+        }
+
         virtual bool is_lbracket() const
         {
             return false;
@@ -247,7 +252,10 @@ public:
 
         string_type to_string() const override
         {
-            string_type s("sub_expression\n");
+            string_type s("sub_expression ");
+            s.append("(");
+            s.append(std::to_string(this->level()));
+            s.append(") \n");
             s.append("lhs\n");
             s.append(lhs_selector_->to_string());
             s.append("rhs\n");
@@ -415,6 +423,9 @@ public:
         string_type to_string() const override
         {
             string_type s("expression_selector ");
+            s.append("(");
+            s.append(std::to_string(this->level()));
+            s.append(") ");
             s.append(std::to_string(selectors_.size()));
             s.append("\n");
             for (auto& selector : selectors_)
@@ -435,7 +446,7 @@ public:
 
         name_expression_selector(std::basic_string<char_type>&& name,
                                  std::unique_ptr<selector_base>&& selector)
-            : selector_base(1), name_(std::move(name), selector_(std::move(selector)))
+            : selector_base(2), name_(std::move(name), selector_(std::move(selector)))
         {
         }
 
@@ -496,7 +507,10 @@ public:
 
         string_type to_string() const override
         {
-            string_type s("list_projection_selector\n");
+            string_type s("list_projection_selector ");
+            s.append("(");
+            s.append(std::to_string(this->level()));
+            s.append(") \n");
             s.append("lhs\n");
             s.append(lhs_selector_->to_string());
             s.append("rhs\n");
@@ -552,6 +566,9 @@ public:
         string_type to_string() const override
         {
             string_type s("list_projection ");
+            s.append("(");
+            s.append(std::to_string(this->level()));
+            s.append(") ");
             s.append(std::to_string(rhs_selectors_.size()));
             s.append("\n");
             for (auto& selector : rhs_selectors_)
@@ -656,7 +673,10 @@ public:
 
         string_type to_string() const override
         {
-            string_type s("flatten_selector\n");
+            string_type s("flatten_selector ");
+            s.append("(");
+            s.append(std::to_string(this->level()));
+            s.append(") \n");
             s.append("lhs\n");
             s.append(lhs_selector_->to_string());
             s.append("rhs\n");
@@ -732,6 +752,9 @@ public:
         string_type to_string() const override
         {
             string_type s("flatten_projection ");
+            s.append("(");
+            s.append(std::to_string(this->level()));
+            s.append(") ");
             s.append(std::to_string(rhs_selectors_.size()));
             s.append("\n");
             for (auto& selector : rhs_selectors_)
@@ -855,6 +878,9 @@ public:
         string_type to_string() const override
         {
             string_type s("identifier ");
+            s.append("(");
+            s.append(std::to_string(this->level()));
+            s.append(") ");
             s.append(identifier_);
             s.append("\n");
             return s;
