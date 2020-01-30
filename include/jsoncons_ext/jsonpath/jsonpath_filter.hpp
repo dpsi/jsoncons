@@ -139,6 +139,18 @@ enum class token_type
     rparen
 };
 
+struct lparen_arg_t
+{
+    explicit lparen_arg_t() = default; 
+};
+constexpr lparen_arg_t lparen_arg{};
+
+struct rparen_arg_t
+{
+    explicit rparen_arg_t() = default; 
+};
+constexpr rparen_arg_t rparen_arg{};
+
 enum class term_type {value,regex,path};
 
 template <class Json>
@@ -183,7 +195,7 @@ public:
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
-    virtual bool exclaim() const
+    virtual bool unary_not() const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
@@ -236,7 +248,7 @@ public:
         return value_;
     }
 
-    bool exclaim() const override
+    bool unary_not() const override
     {
         return !value_.as_bool();
     }
@@ -323,7 +335,7 @@ public:
         return nodes_.size() == 1 ? nodes_[0] : nodes_;
     }
 
-    bool exclaim() const override
+    bool unary_not() const override
     {
         return nodes_.size() == 0;
     }
@@ -371,10 +383,16 @@ private:
 
 public:
 
-    token(token_type type)
-        : type_(type)
+    token(lparen_arg_t)
+        : type_(token_type::lparen)
     {
     }
+
+    token(rparen_arg_t)
+        : type_(token_type::rparen)
+    {
+    }
+
     token(value_term<Json>&& term)
         : type_(token_type::value), value_term_(std::move(term))
     {
@@ -387,15 +405,13 @@ public:
         : type_(token_type::regex), regex_term_(std::move(term))
     {
     }
-    token(std::size_t precedence_level, 
-          bool is_right_associative,
-          typename unary_operator_properties<Json>::operator_type unary_operator)
+
+    token(const unary_operator_properties<Json>& properties)
         : type_(token_type::unary_operator), 
-          unary_op_properties_{precedence_level, 
-                               is_right_associative,
-                               unary_operator}
+          unary_op_properties_(properties)
     {
     }
+
     token(const binary_operator_properties<Json>& properties)
         : type_(token_type::binary_operator), 
           binary_op_properties_(properties)
@@ -1525,9 +1541,6 @@ class jsonpath_filter_parser
     std::vector<filter_state> state_stack_;
     std::vector<filter_path_mode> path_mode_stack_;
 
-    std::size_t line_;
-    std::size_t column_;
-
     class binary_operator_table
     {
         typedef std::map<string_type,binary_operator_properties<Json>> binary_operator_map;
@@ -1560,15 +1573,22 @@ class jsonpath_filter_parser
         }
     };
 
+    unary_operator_properties<Json> unary_not_properties_;
+    unary_operator_properties<Json> unary_minus_properties_;
     binary_operator_table binary_operators_;
+
+    std::size_t line_;
+    std::size_t column_;
 
 public:
     jsonpath_filter_parser()
-        : line_(1), column_(1)
+        : jsonpath_filter_parser(1,1)
     {
     }
     jsonpath_filter_parser(std::size_t line, std::size_t column)
-        : line_(line), column_(column)
+        : unary_not_properties_{ 1,true, unary_not_op },
+          unary_minus_properties_{ 1,true, unary_minus_op },
+          line_(line), column_(column)
     {
     }
 
@@ -1690,11 +1710,11 @@ public:
                         case '(':
                             state = filter_state::expect_path_or_value_or_unary_op;
                             ++depth;
-                            push_token(token<Json>(token_type::lparen));
+                            push_token(token<Json>(lparen_arg));
                             break;
                         case ')':
                             state = filter_state::expect_path_or_value_or_unary_op;
-                            push_token(token<Json>(token_type::rparen));
+                            push_token(token<Json>(rparen_arg));
                             if (--depth == 0)
                             {
                                 state = filter_state::done;
@@ -1994,7 +2014,7 @@ public:
                                 buffer.clear();
                                 buffer_line = buffer_column = 1;
                             }
-                            push_token(token<Json>(token_type::rparen));
+                            push_token(token<Json>(rparen_arg));
                             if (--depth == 0)
                             {
                                 state = filter_state::done;
@@ -2112,16 +2132,14 @@ public:
                         break;
                     case '!':
                     {
-                        std::function<Json(const term<Json>&)> f = [](const term<Json>& b) {return Json(b.exclaim());};
-                        push_token(token<Json>(1, true, f));
+                        push_token(token<Json>(unary_not_properties_));
                         ++p;
                         ++column_;
                         break;
                     }
                     case '-':
                     {
-                        std::function<Json(const term<Json>&)> f = [](const term<Json>& b) {return b.unary_minus();};
-                        push_token(token<Json>(1, true, f));
+                        push_token(token<Json>(unary_minus_properties_));
                         ++p;
                         ++column_;
                         break;
@@ -2148,12 +2166,12 @@ public:
                         break;
                     case '(':
                         ++depth;
-                        push_token(token<Json>(token_type::lparen));
+                        push_token(token<Json>(lparen_arg));
                         ++p;
                         ++column_;
                         break;
                     case ')':
-                        push_token(token<Json>(token_type::rparen));
+                        push_token(token<Json>(rparen_arg));
                         if (--depth == 0)
                         {
                             state = filter_state::done;
@@ -2187,7 +2205,7 @@ public:
                         ++column_;
                         break;
                     case ')':
-                        push_token(token<Json>(token_type::rparen));
+                        push_token(token<Json>(rparen_arg));
                         if (--depth == 0)
                         {
                             state = filter_state::done;
@@ -2234,7 +2252,7 @@ public:
                     case ' ':case '\t':
                         break;
                     case ')':
-                        push_token(token<Json>(token_type::rparen));
+                        push_token(token<Json>(rparen_arg));
                         if (--depth == 0)
                         {
                             state = filter_state::done;
@@ -2307,7 +2325,7 @@ public:
                                 {
                                     push_token(token<Json>(value_term<Json>(std::move(result[0]))));
                                 }
-                                push_token(token<Json>(token_type::rparen));
+                                push_token(token<Json>(rparen_arg));
                             }
                             else
                             {
@@ -2318,7 +2336,7 @@ public:
                         else
                         {
                             push_token(token<Json>(path_term<Json>(buffer, buffer_line, buffer_column)));
-                            push_token(token<Json>(token_type::rparen));
+                            push_token(token<Json>(rparen_arg));
                         }
                         buffer.clear();
                         buffer_line = buffer_column = 1;
@@ -2409,6 +2427,16 @@ public:
         *end_ptr = p;
 
         return jsonpath_filter_expr<Json>(std::move(output_stack_));
+    }
+private:
+    static Json unary_not_op(const term<Json>& a)
+    {
+        return a.unary_not();
+    }
+
+    static Json unary_minus_op(const term<Json>& a)
+    {
+        return a.unary_minus();
     }
 };
 
