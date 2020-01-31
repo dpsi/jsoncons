@@ -561,7 +561,8 @@ public:
     }
 
     template <class OutputIt>
-    std::size_t read(OutputIt p, std::size_t length)
+    typename std::enable_if<std::is_class<OutputIt>::value,std::size_t>::type
+    read(OutputIt p, std::size_t length)
     {
         std::size_t count = 0;
         JSONCONS_TRY
@@ -589,9 +590,7 @@ public:
         }
     }
 
-    template <class T>
-    typename std::enable_if<sizeof(T) == sizeof(char),std::size_t>::type
-    read(T* p, std::size_t length)
+    size_t read(uint8_t* p, std::size_t length)
     {
         std::size_t count = 0;
         JSONCONS_TRY
