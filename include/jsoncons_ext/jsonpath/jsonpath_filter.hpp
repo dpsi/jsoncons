@@ -824,55 +824,104 @@ struct jsonpath_resources
     typedef typename Json::char_type char_type;
     typedef std::basic_string<char_type> string_type;
 
-    class binary_operator_table
-    {
-        typedef std::map<string_type,binary_operator_properties<Json>> binary_operator_map;
-
-        const binary_operator_map operators =
-        {
-            {eqtilde_literal<char_type>(),{2,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_regex<Json>(),a,b); }}},
-            {star_literal<char_type>(),{3,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_mult<Json>(),a,b); }}},
-            {forwardslash_literal<char_type>(),{3,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_div<Json>(),a,b); }}},
-            {plus_literal<char_type>(),{4,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_plus<Json>(),a,b); }}},
-            {minus_literal<char_type>(),{4,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_minus<Json>(),a,b); }}},
-            {lt_literal<char_type>(),{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lt<Json>(),a,b); }}},
-            {lte_literal<char_type>(),{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lte<Json>(),a,b); }}},
-            {gt_literal<char_type>(),{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lt<Json>(),b,a); }}},
-            {gte_literal<char_type>(),{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lte<Json>(),b,a); }}},
-            {eq_literal<char_type>(),{6,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_eq<Json>(),a,b); }}},
-            {ne_literal<char_type>(),{6,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_ne<Json>(),a,b); }}},
-            {ampamp_literal<char_type>(),{7,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_ampamp<Json>(),a,b); }}},
-            {pipepipe_literal<char_type>(),{8,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_pipepipe<Json>(),a,b); }}}
-        };
-
-    public:
-        typename binary_operator_map::const_iterator find(const string_type& key) const
-        {
-            return operators.find(key);
-        }
-        typename binary_operator_map::const_iterator end() const
-        {
-            return operators.end();
-        }
-    };
-
     std::vector<std::unique_ptr<Json>> temp_json_values_;
 
-    unary_operator_properties<Json> unary_not_properties;
+    unary_operator_properties<Json> not_properties;
     unary_operator_properties<Json> unary_minus_properties;
 
-    binary_operator_table binary_operators_;
+    binary_operator_properties<Json> lt_properties;
+    binary_operator_properties<Json> gt_properties;
+    binary_operator_properties<Json> mult_properties;
+    binary_operator_properties<Json> div_properties;
+    binary_operator_properties<Json> plus_properties;
+    binary_operator_properties<Json> minus_properties;
+    binary_operator_properties<Json> lte_properties;
+    binary_operator_properties<Json> gte_properties;
+    binary_operator_properties<Json> ne_properties;
+    binary_operator_properties<Json> eq_properties;
+    binary_operator_properties<Json> eqtilde_properties;
+    binary_operator_properties<Json> ampamp_properties;
+    binary_operator_properties<Json> pipepipe_properties;
 
     jsonpath_resources()
-        : unary_not_properties{ 1,true, unary_not_op },
-          unary_minus_properties{ 1,true, unary_minus_op }
+        : not_properties{ 1,true, unary_not_op },
+          unary_minus_properties{ 1,true, unary_minus_op },
+          lt_properties{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lt<Json>(),a,b); }},
+          gt_properties{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lt<Json>(),b,a); }},
+          mult_properties{3,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_mult<Json>(),a,b); }},
+          div_properties{3,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_div<Json>(),a,b); }},
+          plus_properties{4,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_plus<Json>(),a,b); }},
+          minus_properties{4,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_minus<Json>(),a,b); }},
+          lte_properties{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lte<Json>(),a,b); }},
+          gte_properties{5,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_lte<Json>(),b,a); }},
+          ne_properties{6,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_ne<Json>(),a,b); }},
+          eq_properties{6,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_eq<Json>(),a,b); }},
+          eqtilde_properties{2,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_regex<Json>(),a,b); }},
+          ampamp_properties{7,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_ampamp<Json>(),a,b); }},
+          pipepipe_properties{8,false,[](const term<Json>& a, const term<Json>& b) -> Json {return visit(cmp_pipepipe<Json>(),a,b); }}
     {
     }
 
     const binary_operator_properties<Json>* get_binary_operator_properties(const string_type& id) const
     {
-        auto it = binary_operators_.find(id);
-        return it == binary_operators_.end()  ? nullptr : &(it->second);
+        switch(id.size())
+        {
+            case 1:
+            {
+                char_type c1 = id[0];
+                switch (c1)
+                {
+                    case '<':
+                        return &lt_properties;
+                    case '>':
+                        return &gt_properties;
+                    case '+':
+                        return &plus_properties;
+                    case '-':
+                        return &minus_properties;
+                    case '*':
+                        return &mult_properties;
+                    case '/':
+                        return &div_properties;
+                    default:
+                        return nullptr;
+                }
+                break;
+            }
+            case 2:
+            {
+                char_type c1 = id[0];
+                char_type c2 = id[1];
+                switch (c1)
+                {
+                    case '<':
+                        return c2 == '=' ? &lte_properties : nullptr;
+                    case '>':
+                        return c2 == '=' ? &gte_properties : nullptr;
+                    case '!':
+                        return c2 == '=' ? &ne_properties : nullptr;
+                    case '=':
+                        switch(c2)
+                        {
+                            case '=':
+                                return &eq_properties;
+                            case '~':
+                                return &eqtilde_properties;
+                            default:
+                                return nullptr;
+                        }
+                    case '&':
+                        return c2 == '&' ? &ampamp_properties : nullptr;
+                    case '|':
+                        return c2 == '|' ? &pipepipe_properties : nullptr;
+                    default:
+                        return nullptr;
+                }
+                break;
+            }
+            default:
+                return nullptr;
+        }
     }
 
     template <typename... Args>
@@ -1617,8 +1666,6 @@ class jsonpath_filter_parser
 
     std::vector<token<Json>> output_stack_;
     std::vector<token<Json>> operator_stack_;
-    std::vector<filter_state> state_stack_;
-    std::vector<filter_path_mode> path_mode_stack_;
 
     std::size_t line_;
     std::size_t column_;
@@ -1641,19 +1688,6 @@ public:
     std::size_t column() const
     {
         return column_;
-    }
-
-    void push_state(filter_state state)
-    {
-        state_stack_.push_back(state);
-    }
-
-    filter_state pop_state()
-    {
-        JSONCONS_ASSERT(!state_stack_.empty())
-        filter_state state = state_stack_.back();
-        state_stack_.pop_back();
-        return state;
     }
 
     void push_token(token<Json>&& token)
@@ -1717,11 +1751,16 @@ public:
         }
     }
 
-    jsonpath_filter_expr<Json> parse(jsonpath_resources<Json>& resources, const Json& root, const char_type* p, const char_type* end_expr, const char_type** end_ptr)
+    jsonpath_filter_expr<Json> parse(jsonpath_resources<Json>& resources, 
+                                     const Json& root, 
+                                     const char_type* p, 
+                                     const char_type* end_expr, 
+                                     const char_type** end_ptr)
     {
         output_stack_.clear();
         operator_stack_.clear();
-        state_stack_.clear();
+        std::vector<filter_state> state_stack;
+        std::vector<filter_path_mode> path_mode_stack;
 
         string_type buffer;
         std::size_t buffer_line = 1;
@@ -1786,12 +1825,12 @@ public:
                             break;
                         case '$':
                             buffer.push_back(*p);
-                            path_mode_stack_.back() = filter_path_mode::root_path;
+                            path_mode_stack.back() = filter_path_mode::root_path;
                             state = filter_state::path_argument;
                             break;
                         case '@':
                             buffer.push_back('$');
-                            path_mode_stack_.back() = filter_path_mode::current_path;
+                            path_mode_stack.back() = filter_path_mode::current_path;
                             state = filter_state::path_argument;
                             break;
                         // Maybe error from here down
@@ -2004,7 +2043,7 @@ public:
                         case '(':
                         {
                             buffer.push_back(*p);
-                            path_mode_stack_.push_back(filter_path_mode::path);
+                            path_mode_stack.push_back(filter_path_mode::path);
                             state = filter_state::expect_arg;
                             ++p;
                             ++column_;
@@ -2173,7 +2212,7 @@ public:
                         break;
                     case '!':
                     {
-                        push_token(token<Json>(&(resources.unary_not_properties)));
+                        push_token(token<Json>(&(resources.not_properties)));
                         ++p;
                         ++column_;
                         break;
@@ -2324,9 +2363,9 @@ public:
                     case '*':
                     case '/':
                         {
-                            if (!path_mode_stack_.empty())
+                            if (!path_mode_stack.empty())
                             {
-                                if (path_mode_stack_[0] == filter_path_mode::root_path)
+                                if (path_mode_stack[0] == filter_path_mode::root_path)
                                 {
                                     jsonpath_evaluator<Json,const Json&,detail::VoidPathConstructor<Json>> evaluator(buffer_line,buffer_column);
                                     evaluator.evaluate(resources, root, buffer);
@@ -2340,7 +2379,7 @@ public:
                                 {
                                     push_token(token<Json>(path_term<Json>(buffer, buffer_line, buffer_column)));
                                 }
-                                path_mode_stack_.pop_back();
+                                path_mode_stack.pop_back();
                             }
                             else
                             {
@@ -2355,9 +2394,9 @@ public:
                         }
                         break;
                     case ')':
-                        if (!path_mode_stack_.empty())
+                        if (!path_mode_stack.empty())
                         {
-                            if (path_mode_stack_[0] == filter_path_mode::root_path)
+                            if (path_mode_stack[0] == filter_path_mode::root_path)
                             {
                                 jsonpath_evaluator<Json,const Json&,detail::VoidPathConstructor<Json>> evaluator(buffer_line,buffer_column);
                                 evaluator.evaluate(resources, root, buffer);
@@ -2372,7 +2411,7 @@ public:
                             {
                                 push_token(token<Json>(path_term<Json>(buffer, buffer_line, buffer_column)));
                             }
-                            path_mode_stack_.pop_back();
+                            path_mode_stack.pop_back();
                         }
                         else
                         {
@@ -2468,16 +2507,6 @@ public:
         *end_ptr = p;
 
         return jsonpath_filter_expr<Json>(std::move(output_stack_));
-    }
-private:
-    static Json unary_not_op(const term<Json>& a)
-    {
-        return a.unary_not();
-    }
-
-    static Json unary_minus_op(const term<Json>& a)
-    {
-        return a.unary_minus();
     }
 };
 
