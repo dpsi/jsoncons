@@ -2388,7 +2388,7 @@ public:
                             ++column_;
                             state = filter_state::oper;
                         }
-                        break; 
+                        break;
                     case ')':
                         if (!path_mode_stack_.empty())
                         {

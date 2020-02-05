@@ -87,14 +87,14 @@ Json json_query(const Json& root, const typename Json::string_view_type& path, r
 
     if (result_t == result_type::value) 
     {
-        jsoncons::jsonpath::detail::jsonpath_evaluator<Json,const Json&,detail::VoidPathConstructor<Json>> evaluator;
+        jsoncons::jsonpath::detail::jsonpath_evaluator<Json,reference,detail::VoidPathConstructor<Json>> evaluator;
         jsoncons::jsonpath::detail::jsonpath_resources<Json,pointer> resources;
         evaluator.evaluate(resources, root, path);
         return evaluator.get_values();
     }
     else
     {
-        jsoncons::jsonpath::detail::jsonpath_evaluator<Json,const Json&,detail::PathConstructor<Json>> evaluator;
+        jsoncons::jsonpath::detail::jsonpath_evaluator<Json,reference,detail::PathConstructor<Json>> evaluator;
         jsoncons::jsonpath::detail::jsonpath_resources<Json,pointer> resources;
         evaluator.evaluate(resources, root, path);
         return evaluator.get_normalized_paths();
@@ -107,7 +107,7 @@ void json_replace(Json& root, const typename Json::string_view_type& path, T&& n
     typedef Json& reference;
     using pointer = typename std::conditional<std::is_const<typename std::remove_reference<reference>::type>::value,typename Json::const_pointer,typename Json::pointer>::type;
 
-    jsoncons::jsonpath::detail::jsonpath_evaluator<Json,Json&,detail::VoidPathConstructor<Json>> evaluator;
+    jsoncons::jsonpath::detail::jsonpath_evaluator<Json,reference,detail::VoidPathConstructor<Json>> evaluator;
     jsoncons::jsonpath::detail::jsonpath_resources<Json,pointer> resources;
     evaluator.evaluate(resources, root, path);
     evaluator.replace(std::forward<T>(new_value));
@@ -199,7 +199,7 @@ class jsonpath_evaluator : public ser_context
         pointer val_ptr;
 
         node_type() = default;
-        node_type(const string_type& p, const pointer& valp)
+        node_type(const string_type& p, pointer valp)
             : path(p),val_ptr(valp)
         {
         }
