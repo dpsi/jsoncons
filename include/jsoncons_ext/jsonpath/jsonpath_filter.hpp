@@ -21,29 +21,29 @@
 
 namespace jsoncons { namespace jsonpath { namespace detail {
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class term;
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class value_term;
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class path_term;
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class regex_term;
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct unary_operator_properties
 {
-    typedef std::function<Json(const term<Json,JsonPointer>&)> operator_type;
+    typedef std::function<Json(const term<Json,JsonReference>&)> operator_type;
 
     std::size_t precedence_level;
     bool is_right_associative;
     operator_type op;
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct binary_operator_properties
 {
-    typedef std::function<Json(const term<Json,JsonPointer>&, const term<Json,JsonPointer>&)> operator_type;
+    typedef std::function<Json(const term<Json,JsonReference>&, const term<Json,JsonReference>&)> operator_type;
 
     std::size_t precedence_level;
     bool is_right_associative;
@@ -52,7 +52,7 @@ struct binary_operator_properties
 
 enum class term_type {value,regex,path};
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_plus
 {
     Json plus(const Json& lhs, const Json& rhs) const
@@ -73,12 +73,12 @@ struct cmp_plus
         return result;
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return plus(lhs.value(), rhs.value());
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -87,7 +87,7 @@ struct cmp_plus
         return (*this)(lhs.value(),rhs.result()[0]);
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -96,7 +96,7 @@ struct cmp_plus
         return (*this)(rhs, lhs);
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty() || rhs.result().empty())
         {
@@ -105,18 +105,18 @@ struct cmp_plus
         return (*this)(lhs.result()[0],rhs.result()[0]);
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_mult
 {
     Json mult(const Json& lhs, const Json& rhs) const
@@ -137,12 +137,12 @@ struct cmp_mult
         return result;
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return mult(lhs.value(), rhs.value());
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -151,7 +151,7 @@ struct cmp_mult
         return mult(lhs.value(),rhs.result()[0]);
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -160,7 +160,7 @@ struct cmp_mult
         return (*this)(rhs, lhs);
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty() || rhs.result().empty())
         {
@@ -169,18 +169,18 @@ struct cmp_mult
         return mult(lhs.result()[0],rhs.result()[0]);
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_div
 {
     Json div(const Json& lhs, const Json& rhs) const
@@ -201,12 +201,12 @@ struct cmp_div
         return result;
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return div(lhs.value(), rhs.value());
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -215,7 +215,7 @@ struct cmp_div
         return div(lhs.value(),rhs.result()[0]);
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -224,7 +224,7 @@ struct cmp_div
         return div(lhs.result()[0],rhs.value());
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty() || rhs.result().empty())
         {
@@ -233,26 +233,26 @@ struct cmp_div
         return div(lhs.result()[0],rhs.result()[0]);
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_eq
 {
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return lhs.value() == rhs.value();
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -261,7 +261,7 @@ struct cmp_eq
         return lhs.value() == rhs.result()[0];
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -270,7 +270,7 @@ struct cmp_eq
         return (*this)(rhs, lhs);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty())
         {
@@ -295,32 +295,32 @@ struct cmp_eq
         return true;
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_ne
 {
-    cmp_eq<Json,JsonPointer> eq;
+    cmp_eq<Json,JsonReference> eq;
     constexpr cmp_ne()
         : eq{}
     {
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const 
+    bool operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const 
     {
         return !eq(lhs, rhs);
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const 
+    bool operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const 
     {
         if (rhs.result().size() != 1)
         {
@@ -329,7 +329,7 @@ struct cmp_ne
         return !eq(lhs, rhs);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -338,7 +338,7 @@ struct cmp_ne
         return !eq(lhs, rhs);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const 
+    bool operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const 
     {
         if (lhs.result().empty())
         {
@@ -351,26 +351,26 @@ struct cmp_ne
         return !eq(lhs, rhs);
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_pipepipe
 {
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return lhs.value().as_bool() || rhs.value().as_bool();
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -379,7 +379,7 @@ struct cmp_pipepipe
         return (*this)(lhs.value(),rhs.result()[0]);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -388,7 +388,7 @@ struct cmp_pipepipe
         return (*this)(rhs, lhs);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty())
         {
@@ -412,26 +412,26 @@ struct cmp_pipepipe
         return true;
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_ampamp
 {
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return lhs.value().as_bool() && rhs.value().as_bool();
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -440,7 +440,7 @@ struct cmp_ampamp
         return (*this)(lhs.value(),rhs.result()[0]);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -449,7 +449,7 @@ struct cmp_ampamp
         return (*this)(rhs, lhs);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty())
         {
@@ -473,21 +473,21 @@ struct cmp_ampamp
         return true;
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_lt
 {
-    cmp_eq<Json,JsonPointer> eq;
+    cmp_eq<Json,JsonReference> eq;
 
     constexpr cmp_lt()
         : eq{}
@@ -516,12 +516,12 @@ struct cmp_lt
         return result;
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return lhs.value() < rhs.value();
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -530,7 +530,7 @@ struct cmp_lt
         return !((*this)(rhs, lhs) || eq(rhs,lhs));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
          {
@@ -540,7 +540,7 @@ struct cmp_lt
         return result;
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty())
         {
@@ -559,33 +559,33 @@ struct cmp_lt
         return result ? min_len == lhs.result().size() : false;
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_lte
 {
-    cmp_lt<Json,JsonPointer> lt;
+    cmp_lt<Json,JsonReference> lt;
 
     constexpr cmp_lte()
         : lt{}
     {
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return lhs.value() <= rhs.value();
     }
 
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -594,7 +594,7 @@ struct cmp_lte
         return !lt(rhs, lhs);
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
          {
@@ -604,7 +604,7 @@ struct cmp_lte
         return result;
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty())
         {
@@ -623,21 +623,21 @@ struct cmp_lte
         return result ? min_len == lhs.result().size() : false;
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_minus
 {
-    cmp_lt<Json,JsonPointer> lt;
+    cmp_lt<Json,JsonReference> lt;
 
     constexpr cmp_minus()
         : lt{}
@@ -662,12 +662,12 @@ struct cmp_minus
         return result;
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         return minus(lhs.value(), rhs.value());
     }
 
-    Json operator()(const value_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const value_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (rhs.result().size() != 1)
         {
@@ -676,7 +676,7 @@ struct cmp_minus
         return minus(lhs.value(),rhs.result()[0]);
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const value_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const value_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().size() != 1)
         {
@@ -685,7 +685,7 @@ struct cmp_minus
         return minus(lhs.result()[0],rhs.value());
     }
 
-    Json operator()(const path_term<Json,JsonPointer>& lhs, const path_term<Json,JsonPointer>& rhs) const
+    Json operator()(const path_term<Json,JsonReference>& lhs, const path_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty() || rhs.result().empty())
         {
@@ -694,42 +694,42 @@ struct cmp_minus
         return minus(lhs.result()[0],rhs.result()[0]);
     }
 
-    bool operator()(const value_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const value_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>&, const regex_term<Json,JsonPointer>&) const
+    bool operator()(const path_term<Json,JsonReference>&, const regex_term<Json,JsonReference>&) const
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 struct cmp_regex
 {
-    bool operator()(const value_term<Json,JsonPointer>&, const value_term<Json,JsonPointer>&) const 
+    bool operator()(const value_term<Json,JsonReference>&, const value_term<Json,JsonReference>&) const 
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
-    bool operator()(const path_term<Json,JsonPointer>&, const value_term<Json,JsonPointer>&) const 
+    bool operator()(const path_term<Json,JsonReference>&, const value_term<Json,JsonReference>&) const 
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
-    bool operator()(const path_term<Json,JsonPointer>&, const path_term<Json,JsonPointer>&) const 
+    bool operator()(const path_term<Json,JsonReference>&, const path_term<Json,JsonReference>&) const 
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
-    bool operator()(const value_term<Json,JsonPointer>& lhs, const regex_term<Json,JsonPointer>& rhs) const
+    bool operator()(const value_term<Json,JsonReference>& lhs, const regex_term<Json,JsonReference>& rhs) const
     {
         return rhs.evaluate(lhs.value().as_string()); 
     }
-    bool operator()(const value_term<Json,JsonPointer>&, const path_term<Json,JsonPointer>&) const 
+    bool operator()(const value_term<Json,JsonReference>&, const path_term<Json,JsonReference>&) const 
     {
         JSONCONS_THROW(jsonpath_error(jsonpath_errc::invalid_filter_unsupported_operator));
     }
 
-    bool operator()(const path_term<Json,JsonPointer>& lhs, const regex_term<Json,JsonPointer>& rhs) const
+    bool operator()(const path_term<Json,JsonReference>& lhs, const regex_term<Json,JsonReference>& rhs) const
     {
         if (lhs.result().empty())
             return false;
@@ -744,29 +744,29 @@ struct cmp_regex
     }
 };
 
-template <typename Visitor,typename Json,typename JsonPointer>
-Json visit(Visitor vis, const term<Json,JsonPointer>& v, const term<Json,JsonPointer>& w)
+template <typename Visitor,typename Json,typename JsonReference>
+Json visit(Visitor vis, const term<Json,JsonReference>& v, const term<Json,JsonReference>& w)
 {
     switch(v.type())
     {
         case term_type::value:
         {
-            const auto& t1 = static_cast<const value_term<Json,JsonPointer>&>(v);
+            const auto& t1 = static_cast<const value_term<Json,JsonReference>&>(v);
             switch(w.type())
             {
                 case term_type::value:
                 {
-                    const auto& t2 = static_cast<const value_term<Json,JsonPointer>&>(w);
+                    const auto& t2 = static_cast<const value_term<Json,JsonReference>&>(w);
                     return vis(t1, t2);
                 }
                 case term_type::path:
                 {
-                    const auto& t2 = static_cast<const path_term<Json,JsonPointer>&>(w);
+                    const auto& t2 = static_cast<const path_term<Json,JsonReference>&>(w);
                     return vis(t1, t2);
                 }
                 case term_type::regex:
                 {
-                    const auto& t2 = static_cast<const regex_term<Json,JsonPointer>&>(w);
+                    const auto& t2 = static_cast<const regex_term<Json,JsonReference>&>(w);
                     return vis(t1, t2);
                 }
             }
@@ -774,22 +774,22 @@ Json visit(Visitor vis, const term<Json,JsonPointer>& v, const term<Json,JsonPoi
         }
         case term_type::path:
         {
-            const auto& t1 = static_cast<const path_term<Json,JsonPointer>&>(v);
+            const auto& t1 = static_cast<const path_term<Json,JsonReference>&>(v);
             switch(w.type())
             {
                 case term_type::value:
                 {
-                    const auto& t2 = static_cast<const value_term<Json,JsonPointer>&>(w);
+                    const auto& t2 = static_cast<const value_term<Json,JsonReference>&>(w);
                     return vis(t1, t2);
                 }
                 case term_type::path:
                 {
-                    const auto& t2 = static_cast<const path_term<Json,JsonPointer>&>(w);
+                    const auto& t2 = static_cast<const path_term<Json,JsonReference>&>(w);
                     return vis(t1, t2);
                 }
                 case term_type::regex:
                 {
-                    const auto& t2 = static_cast<const regex_term<Json,JsonPointer>&>(w);
+                    const auto& t2 = static_cast<const regex_term<Json,JsonReference>&>(w);
                     return vis(t1, t2);
                 }
             }
@@ -804,7 +804,7 @@ Json visit(Visitor vis, const term<Json,JsonPointer>& v, const term<Json,JsonPoi
     return false;
 }
 
-template <class Json, class JsonPointer>
+template <class Json, class JsonReference>
 struct jsonpath_resources
 {
     typedef typename Json::char_type char_type;
@@ -812,43 +812,43 @@ struct jsonpath_resources
 
     std::vector<std::unique_ptr<Json>> temp_json_values_;
 
-    unary_operator_properties<Json,JsonPointer> not_properties;
-    unary_operator_properties<Json,JsonPointer> unary_minus_properties;
+    unary_operator_properties<Json,JsonReference> not_properties;
+    unary_operator_properties<Json,JsonReference> unary_minus_properties;
 
-    binary_operator_properties<Json,JsonPointer> lt_properties;
-    binary_operator_properties<Json,JsonPointer> gt_properties;
-    binary_operator_properties<Json,JsonPointer> mult_properties;
-    binary_operator_properties<Json,JsonPointer> div_properties;
-    binary_operator_properties<Json,JsonPointer> plus_properties;
-    binary_operator_properties<Json,JsonPointer> minus_properties;
-    binary_operator_properties<Json,JsonPointer> lte_properties;
-    binary_operator_properties<Json,JsonPointer> gte_properties;
-    binary_operator_properties<Json,JsonPointer> ne_properties;
-    binary_operator_properties<Json,JsonPointer> eq_properties;
-    binary_operator_properties<Json,JsonPointer> eqtilde_properties;
-    binary_operator_properties<Json,JsonPointer> ampamp_properties;
-    binary_operator_properties<Json,JsonPointer> pipepipe_properties;
+    binary_operator_properties<Json,JsonReference> lt_properties;
+    binary_operator_properties<Json,JsonReference> gt_properties;
+    binary_operator_properties<Json,JsonReference> mult_properties;
+    binary_operator_properties<Json,JsonReference> div_properties;
+    binary_operator_properties<Json,JsonReference> plus_properties;
+    binary_operator_properties<Json,JsonReference> minus_properties;
+    binary_operator_properties<Json,JsonReference> lte_properties;
+    binary_operator_properties<Json,JsonReference> gte_properties;
+    binary_operator_properties<Json,JsonReference> ne_properties;
+    binary_operator_properties<Json,JsonReference> eq_properties;
+    binary_operator_properties<Json,JsonReference> eqtilde_properties;
+    binary_operator_properties<Json,JsonReference> ampamp_properties;
+    binary_operator_properties<Json,JsonReference> pipepipe_properties;
 
     jsonpath_resources()
         : not_properties{ 1,true, unary_not_op },
           unary_minus_properties{ 1,true, unary_minus_op },
-          lt_properties{5,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_lt<Json,JsonPointer>(),a,b); }},
-          gt_properties{5,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_lt<Json,JsonPointer>(),b,a); }},
-          mult_properties{3,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_mult<Json,JsonPointer>(),a,b); }},
-          div_properties{3,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_div<Json,JsonPointer>(),a,b); }},
-          plus_properties{4,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_plus<Json,JsonPointer>(),a,b); }},
-          minus_properties{4,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_minus<Json,JsonPointer>(),a,b); }},
-          lte_properties{5,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_lte<Json,JsonPointer>(),a,b); }},
-          gte_properties{5,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_lte<Json,JsonPointer>(),b,a); }},
-          ne_properties{6,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_ne<Json,JsonPointer>(),a,b); }},
-          eq_properties{6,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_eq<Json,JsonPointer>(),a,b); }},
-          eqtilde_properties{2,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_regex<Json,JsonPointer>(),a,b); }},
-          ampamp_properties{7,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_ampamp<Json,JsonPointer>(),a,b); }},
-          pipepipe_properties{8,false,[](const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b) -> Json {return visit(cmp_pipepipe<Json,JsonPointer>(),a,b); }}
+          lt_properties{5,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_lt<Json,JsonReference>(),a,b); }},
+          gt_properties{5,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_lt<Json,JsonReference>(),b,a); }},
+          mult_properties{3,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_mult<Json,JsonReference>(),a,b); }},
+          div_properties{3,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_div<Json,JsonReference>(),a,b); }},
+          plus_properties{4,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_plus<Json,JsonReference>(),a,b); }},
+          minus_properties{4,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_minus<Json,JsonReference>(),a,b); }},
+          lte_properties{5,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_lte<Json,JsonReference>(),a,b); }},
+          gte_properties{5,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_lte<Json,JsonReference>(),b,a); }},
+          ne_properties{6,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_ne<Json,JsonReference>(),a,b); }},
+          eq_properties{6,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_eq<Json,JsonReference>(),a,b); }},
+          eqtilde_properties{2,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_regex<Json,JsonReference>(),a,b); }},
+          ampamp_properties{7,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_ampamp<Json,JsonReference>(),a,b); }},
+          pipepipe_properties{8,false,[](const term<Json,JsonReference>& a, const term<Json,JsonReference>& b) -> Json {return visit(cmp_pipepipe<Json,JsonReference>(),a,b); }}
     {
     }
 
-    const binary_operator_properties<Json,JsonPointer>* get_binary_operator_properties(const string_type& id) const
+    const binary_operator_properties<Json,JsonReference>* get_binary_operator_properties(const string_type& id) const
     {
         switch(id.size())
         {
@@ -919,12 +919,12 @@ struct jsonpath_resources
         return ptr;
     }
 private:
-    static Json unary_not_op(const term<Json,JsonPointer>& a)
+    static Json unary_not_op(const term<Json,JsonReference>& a)
     {
         return a.unary_not();
     }
 
-    static Json unary_minus_op(const term<Json,JsonPointer>& a)
+    static Json unary_minus_op(const term<Json,JsonReference>& a)
     {
         return a.unary_minus();
     }
@@ -1061,7 +1061,7 @@ Json unary_minus(const Json& lhs)
     return result;
 }
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class term
 {
 public:
@@ -1076,7 +1076,7 @@ public:
     term& operator=(const term&) = default;
     term& operator=(term&&) = default;
 
-    virtual void initialize(jsonpath_resources<Json,JsonPointer>& resources, const Json&) = 0;
+    virtual void initialize(jsonpath_resources<Json,JsonReference>& resources, JsonReference) = 0;
 
     virtual term_type type() const = 0;
 
@@ -1099,14 +1099,14 @@ public:
     }
 };
 
-template <class Json,class JsonPointer>
-class value_term final : public term<Json,JsonPointer>
+template <class Json,class JsonReference>
+class value_term final : public term<Json,JsonReference>
 {
     Json value_;
 public:
     value_term() = default;
 
-    value_term(const Json& val)
+    value_term(JsonReference val)
         : value_(val)
     {
     }
@@ -1120,7 +1120,7 @@ public:
     value_term& operator=(const value_term&) = default;
     value_term& operator=(value_term&&) = default;
 
-    void initialize(jsonpath_resources<Json,JsonPointer>&, const Json&) override
+    void initialize(jsonpath_resources<Json,JsonReference>&, JsonReference) override
     {
     }
 
@@ -1136,7 +1136,7 @@ public:
         return value_;
     }
 
-    const Json& value() const
+    JsonReference value() const
     {
         return value_;
     }
@@ -1152,8 +1152,8 @@ public:
     }
 };
 
-template <class Json,class JsonPointer>
-class regex_term final : public term<Json,JsonPointer>
+template <class Json,class JsonReference>
+class regex_term final : public term<Json,JsonReference>
 {
     typedef typename Json::char_type char_type;
     typedef std::basic_string<char_type> string_type;
@@ -1170,7 +1170,7 @@ public:
     regex_term& operator=(const regex_term&) = default;
     regex_term& operator=(regex_term&&) = default;
 
-    void initialize(jsonpath_resources<Json,JsonPointer>&, const Json&) override
+    void initialize(jsonpath_resources<Json,JsonReference>&, JsonReference) override
     {
     }
 
@@ -1182,8 +1182,8 @@ public:
     }
 };
 
-template <class Json,class JsonPointer>
-class path_term final : public term<Json,JsonPointer>
+template <class Json,class JsonReference>
+class path_term final : public term<Json,JsonReference>
 {
     typedef typename Json::char_type char_type;
     typedef std::basic_string<char_type> string_type;
@@ -1203,9 +1203,9 @@ public:
     path_term& operator=(const path_term&) = default;
     path_term& operator=(path_term&&) = default;
 
-    void initialize(jsonpath_resources<Json,JsonPointer>& resources, const Json& current_node) override
+    void initialize(jsonpath_resources<Json,JsonReference>& resources, JsonReference current_node) override
     {
-        jsonpath_evaluator<Json,const Json&,VoidPathConstructor<Json>> evaluator(line_,column_);
+        jsonpath_evaluator<Json,JsonReference,VoidPathConstructor<Json>> evaluator(line_,column_);
         evaluator.evaluate(resources, current_node, path_);
         nodes_ = evaluator.get_values();
     }
@@ -1239,7 +1239,7 @@ public:
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class token
 {
 private:
@@ -1247,11 +1247,11 @@ private:
 
     union
     {
-        const unary_operator_properties<Json,JsonPointer>* unary_op_properties_;
-        const binary_operator_properties<Json,JsonPointer>* binary_op_properties_;
-        value_term<Json,JsonPointer> value_term_;
-        path_term<Json,JsonPointer> path_term_;
-        regex_term<Json,JsonPointer> regex_term_;
+        const unary_operator_properties<Json,JsonReference>* unary_op_properties_;
+        const binary_operator_properties<Json,JsonReference>* binary_op_properties_;
+        value_term<Json,JsonReference> value_term_;
+        path_term<Json,JsonReference> path_term_;
+        regex_term<Json,JsonReference> regex_term_;
     };
 
 public:
@@ -1266,26 +1266,26 @@ public:
     {
     }
 
-    token(value_term<Json,JsonPointer>&& term)
+    token(value_term<Json,JsonReference>&& term)
         : type_(token_type::value), value_term_(std::move(term))
     {
     }
-    token(path_term<Json,JsonPointer>&& term)
+    token(path_term<Json,JsonReference>&& term)
         : type_(token_type::path), path_term_(std::move(term))
     {
     }
-    token(regex_term<Json,JsonPointer>&& term)
+    token(regex_term<Json,JsonReference>&& term)
         : type_(token_type::regex), regex_term_(std::move(term))
     {
     }
 
-    token(const unary_operator_properties<Json,JsonPointer>* properties)
+    token(const unary_operator_properties<Json,JsonReference>* properties)
         : type_(token_type::unary_operator), 
           unary_op_properties_(properties)
     {
     }
 
-    token(const binary_operator_properties<Json,JsonPointer>* properties)
+    token(const binary_operator_properties<Json,JsonReference>* properties)
         : type_(token_type::binary_operator), 
           binary_op_properties_(properties)
     {
@@ -1385,7 +1385,7 @@ public:
         return type_;
     }
 
-    Json operator()(const term<Json,JsonPointer>& a)
+    Json operator()(const term<Json,JsonReference>& a)
     {
         switch(type_)
         {
@@ -1397,7 +1397,7 @@ public:
         }
     }
 
-    Json operator()(const term<Json,JsonPointer>& a, const term<Json,JsonPointer>& b)
+    Json operator()(const term<Json,JsonReference>& a, const term<Json,JsonReference>& b)
     {
         switch(type_)
         {
@@ -1473,7 +1473,7 @@ public:
         }
     }
 
-    const term<Json,JsonPointer>& operand()
+    const term<Json,JsonReference>& operand()
     {
         switch(type_)
         {
@@ -1488,7 +1488,7 @@ public:
         }
     }
 
-    void initialize(jsonpath_resources<Json,JsonPointer>& resources, const Json& current_node)
+    void initialize(jsonpath_resources<Json,JsonReference>& resources, JsonReference current_node)
     {
         switch(type_)
         {
@@ -1514,13 +1514,13 @@ private:
         switch (type_)
         {
         case token_type::value:
-            ::new(static_cast<void*>(&this->value_term_))value_term<Json,JsonPointer>(other.value_term_);
+            ::new(static_cast<void*>(&this->value_term_))value_term<Json,JsonReference>(other.value_term_);
             break;
         case token_type::path:
-            ::new(static_cast<void*>(&this->path_term_))path_term<Json,JsonPointer>(other.path_term_);
+            ::new(static_cast<void*>(&this->path_term_))path_term<Json,JsonReference>(other.path_term_);
             break;
         case token_type::regex:
-            ::new(static_cast<void*>(&this->regex_term_))regex_term<Json,JsonPointer>(other.regex_term_);
+            ::new(static_cast<void*>(&this->regex_term_))regex_term<Json,JsonReference>(other.regex_term_);
             break;
         case token_type::unary_operator:
             this->unary_op_properties_ = other.unary_op_properties_;
@@ -1539,13 +1539,13 @@ private:
         switch (type_)
         {
         case token_type::value:
-            ::new(static_cast<void*>(&this->value_term_))value_term<Json,JsonPointer>(std::move(other.value_term_));
+            ::new(static_cast<void*>(&this->value_term_))value_term<Json,JsonReference>(std::move(other.value_term_));
             break;
         case token_type::path:
-            ::new(static_cast<void*>(&this->path_term_))path_term<Json,JsonPointer>(std::move(other.path_term_));
+            ::new(static_cast<void*>(&this->path_term_))path_term<Json,JsonReference>(std::move(other.path_term_));
             break;
         case token_type::regex:
-            ::new(static_cast<void*>(&this->regex_term_))regex_term<Json,JsonPointer>(std::move(other.regex_term_));
+            ::new(static_cast<void*>(&this->regex_term_))regex_term<Json,JsonReference>(std::move(other.regex_term_));
             break;
         case token_type::unary_operator:
             this->unary_op_properties_ = other.unary_op_properties_;
@@ -1577,14 +1577,14 @@ private:
     }
 };
 
-template <class Json,class JsonPointer>
-token<Json,JsonPointer> evaluate(jsonpath_resources<Json,JsonPointer>& resources, const Json& context, std::vector<token<Json,JsonPointer>>& tokens)
+template <class Json,class JsonReference>
+token<Json,JsonReference> evaluate(jsonpath_resources<Json,JsonReference>& resources, JsonReference context, std::vector<token<Json,JsonReference>>& tokens)
 {
     for (auto it = tokens.begin(); it != tokens.end(); ++it)
     {
         it->initialize(resources, context);
     }
-    std::vector<token<Json,JsonPointer>> stack;
+    std::vector<token<Json,JsonReference>> stack;
     stack.reserve(tokens.size());
     for (auto& t : tokens)
     {
@@ -1596,7 +1596,7 @@ token<Json,JsonPointer> evaluate(jsonpath_resources<Json,JsonPointer>& resources
         {
             auto rhs = std::move(stack.back());
             stack.pop_back();
-            stack.push_back(token<Json,JsonPointer>(value_term<Json,JsonPointer>(t(rhs.operand()))));
+            stack.push_back(token<Json,JsonReference>(value_term<Json,JsonReference>(t(rhs.operand()))));
         }
         else if (t.is_binary_operator())
         {
@@ -1604,7 +1604,7 @@ token<Json,JsonPointer> evaluate(jsonpath_resources<Json,JsonPointer>& resources
             stack.pop_back();
             auto lhs = std::move(stack.back());
             stack.pop_back();
-            stack.push_back(token<Json,JsonPointer>(value_term<Json,JsonPointer>(t(lhs.operand(), rhs.operand()))));
+            stack.push_back(token<Json,JsonReference>(value_term<Json,JsonReference>(t(lhs.operand(), rhs.operand()))));
         }
     }
     if (stack.size() != 1)
@@ -1615,43 +1615,43 @@ token<Json,JsonPointer> evaluate(jsonpath_resources<Json,JsonPointer>& resources
     return stack.back();
 }
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class jsonpath_filter_expr
 {
 public:
-    std::vector<token<Json,JsonPointer>> tokens_;
+    std::vector<token<Json,JsonReference>> tokens_;
 public:
     jsonpath_filter_expr()
     {
     }
 
-    jsonpath_filter_expr(std::vector<token<Json,JsonPointer>>&& tokens)
+    jsonpath_filter_expr(std::vector<token<Json,JsonReference>>&& tokens)
         : tokens_(std::move(tokens))
     {
     }
 
-    Json eval(jsonpath_resources<Json,JsonPointer>& resources, const Json& current_node)
+    Json eval(jsonpath_resources<Json,JsonReference>& resources, JsonReference current_node)
     {
-        auto t = evaluate(resources, current_node, tokens_);
+        auto t = evaluate<Json, JsonReference>(resources, current_node, tokens_);
         return t.operand().get_single_node();
     }
 
-    bool exists(jsonpath_resources<Json,JsonPointer>& resources, const Json& current_node)
+    bool exists(jsonpath_resources<Json,JsonReference>& resources, JsonReference current_node)
     {
-        auto t = evaluate(resources, current_node,tokens_);
+        auto t = evaluate<Json,JsonReference>(resources, current_node,tokens_);
         return t.operand().accept_single_node();
     }
 };
 
-template <class Json,class JsonPointer>
+template <class Json,class JsonReference>
 class jsonpath_filter_parser
 {
     typedef typename Json::char_type char_type;
     typedef std::basic_string<char_type> string_type;
     typedef typename Json::string_view_type string_view_type;
 
-    std::vector<token<Json,JsonPointer>> output_stack_;
-    std::vector<token<Json,JsonPointer>> operator_stack_;
+    std::vector<token<Json,JsonReference>> output_stack_;
+    std::vector<token<Json,JsonReference>> operator_stack_;
     std::vector<filter_state> state_stack_;
     std::vector<filter_path_mode> path_mode_stack_;
 
@@ -1691,7 +1691,7 @@ public:
         return state;
     }
 
-    void push_token(token<Json,JsonPointer>&& token)
+    void push_token(token<Json,JsonReference>&& token)
     {
         switch (token.type())
         {
@@ -1752,7 +1752,7 @@ public:
         }
     }
 
-    jsonpath_filter_expr<Json,JsonPointer> parse(jsonpath_resources<Json,JsonPointer>& resources, const Json& root, const char_type* p, const char_type* end_expr, const char_type** end_ptr)
+    jsonpath_filter_expr<Json,JsonReference> parse(jsonpath_resources<Json,JsonReference>& resources, JsonReference root, const char_type* p, const char_type* end_expr, const char_type** end_ptr)
     {
         output_stack_.clear();
         operator_stack_.clear();
@@ -1786,11 +1786,11 @@ public:
                         case '(':
                             state = filter_state::expect_path_or_value_or_unary_op;
                             ++depth;
-                            push_token(token<Json,JsonPointer>(lparen_arg));
+                            push_token(token<Json,JsonReference>(lparen_arg));
                             break;
                         case ')':
                             state = filter_state::expect_path_or_value_or_unary_op;
-                            push_token(token<Json,JsonPointer>(rparen_arg));
+                            push_token(token<Json,JsonReference>(rparen_arg));
                             if (--depth == 0)
                             {
                                 state = filter_state::done;
@@ -1978,7 +1978,7 @@ public:
                         }
                         buffer.clear();
                         buffer_line = buffer_column = 1;
-                        push_token(token<Json,JsonPointer>(properties));
+                        push_token(token<Json,JsonReference>(properties));
                         state = filter_state::expect_regex;
                         break;
                     }
@@ -1996,7 +1996,7 @@ public:
                         }
                         buffer.clear();
                         buffer_line = buffer_column = 1;
-                        push_token(token<Json,JsonPointer>(properties));
+                        push_token(token<Json,JsonReference>(properties));
                         state = filter_state::expect_path_or_value_or_unary_op;
                         break;
                     }
@@ -2009,7 +2009,7 @@ public:
                         }
                         buffer.clear();
                         buffer_line = buffer_column = 1;
-                        push_token(token<Json,JsonPointer>(properties));
+                        push_token(token<Json,JsonReference>(properties));
                         state = filter_state::expect_path_or_value_or_unary_op;
                         break;
                     }
@@ -2024,7 +2024,7 @@ public:
                             {
                                 JSONCONS_TRY
                                 {
-                                    push_token(token<Json,JsonPointer>(value_term<Json,JsonPointer>(Json::parse(buffer))));
+                                    push_token(token<Json,JsonReference>(value_term<Json,JsonReference>(Json::parse(buffer))));
                                 }
                                 JSONCONS_CATCH(const ser_error&)     
                                 {
@@ -2060,7 +2060,7 @@ public:
                                 {
                                     JSONCONS_TRY
                                     {
-                                        push_token(token<Json,JsonPointer>(value_term<Json,JsonPointer>(Json::parse(buffer))));
+                                        push_token(token<Json,JsonReference>(value_term<Json,JsonReference>(Json::parse(buffer))));
                                     }
                                     JSONCONS_CATCH(const ser_error&)     
                                     {
@@ -2081,7 +2081,7 @@ public:
                                 JSONCONS_TRY
                                 {
                                     auto val = Json::parse(buffer);
-                                    push_token(token<Json,JsonPointer>(value_term<Json,JsonPointer>(std::move(val))));
+                                    push_token(token<Json,JsonReference>(value_term<Json,JsonReference>(std::move(val))));
                                 }
                                 JSONCONS_CATCH(const ser_error&)     
                                 {
@@ -2090,7 +2090,7 @@ public:
                                 buffer.clear();
                                 buffer_line = buffer_column = 1;
                             }
-                            push_token(token<Json,JsonPointer>(rparen_arg));
+                            push_token(token<Json,JsonReference>(rparen_arg));
                             if (--depth == 0)
                             {
                                 state = filter_state::done;
@@ -2130,7 +2130,7 @@ public:
                                 JSONCONS_TRY
                                 {
                                     auto val = Json::parse(buffer);
-                                    push_token(token<Json,JsonPointer>(value_term<Json,JsonPointer>(std::move(val))));
+                                    push_token(token<Json,JsonReference>(value_term<Json,JsonReference>(std::move(val))));
                                 }
                                 JSONCONS_CATCH(const ser_error&)     
                                 {
@@ -2168,7 +2168,7 @@ public:
                             JSONCONS_TRY
                             {
                                 auto val = Json::parse(buffer);
-                                push_token(token<Json,JsonPointer>(value_term<Json,JsonPointer>(std::move(val))));
+                                push_token(token<Json,JsonReference>(value_term<Json,JsonReference>(std::move(val))));
                             }
                             JSONCONS_CATCH(const ser_error&)     
                             {
@@ -2208,14 +2208,14 @@ public:
                         break;
                     case '!':
                     {
-                        push_token(token<Json,JsonPointer>(&(resources.not_properties)));
+                        push_token(token<Json,JsonReference>(&(resources.not_properties)));
                         ++p;
                         ++column_;
                         break;
                     }
                     case '-':
                     {
-                        push_token(token<Json,JsonPointer>(&(resources.unary_minus_properties)));
+                        push_token(token<Json,JsonReference>(&(resources.unary_minus_properties)));
                         ++p;
                         ++column_;
                         break;
@@ -2242,12 +2242,12 @@ public:
                         break;
                     case '(':
                         ++depth;
-                        push_token(token<Json,JsonPointer>(lparen_arg));
+                        push_token(token<Json,JsonReference>(lparen_arg));
                         ++p;
                         ++column_;
                         break;
                     case ')':
-                        push_token(token<Json,JsonPointer>(rparen_arg));
+                        push_token(token<Json,JsonReference>(rparen_arg));
                         if (--depth == 0)
                         {
                             state = filter_state::done;
@@ -2281,7 +2281,7 @@ public:
                         ++column_;
                         break;
                     case ')':
-                        push_token(token<Json,JsonPointer>(rparen_arg));
+                        push_token(token<Json,JsonReference>(rparen_arg));
                         if (--depth == 0)
                         {
                             state = filter_state::done;
@@ -2328,7 +2328,7 @@ public:
                     case ' ':case '\t':
                         break;
                     case ')':
-                        push_token(token<Json,JsonPointer>(rparen_arg));
+                        push_token(token<Json,JsonReference>(rparen_arg));
                         if (--depth == 0)
                         {
                             state = filter_state::done;
@@ -2363,23 +2363,23 @@ public:
                             {
                                 if (path_mode_stack_[0] == filter_path_mode::root_path)
                                 {
-                                    jsonpath_evaluator<Json,const Json&,detail::VoidPathConstructor<Json>> evaluator(buffer_line,buffer_column);
+                                    jsonpath_evaluator<Json,JsonReference,detail::VoidPathConstructor<Json>> evaluator(buffer_line,buffer_column);
                                     evaluator.evaluate(resources, root, buffer);
                                     auto result = evaluator.get_values();
                                     if (result.size() > 0)
                                     {
-                                        push_token(token<Json,JsonPointer>(value_term<Json,JsonPointer>(std::move(result[0]))));
+                                        push_token(token<Json,JsonReference>(value_term<Json,JsonReference>(std::move(result[0]))));
                                     }
                                 }
                                 else
                                 {
-                                    push_token(token<Json,JsonPointer>(path_term<Json,JsonPointer>(buffer, buffer_line, buffer_column)));
+                                    push_token(token<Json,JsonReference>(path_term<Json,JsonReference>(buffer, buffer_line, buffer_column)));
                                 }
                                 path_mode_stack_.pop_back();
                             }
                             else
                             {
-                                push_token(token<Json,JsonPointer>(path_term<Json,JsonPointer>(buffer, buffer_line, buffer_column)));
+                                push_token(token<Json,JsonReference>(path_term<Json,JsonReference>(buffer, buffer_line, buffer_column)));
                             }
                             buffer.clear();
                             buffer_line = buffer_column = 1;
@@ -2394,25 +2394,25 @@ public:
                         {
                             if (path_mode_stack_[0] == filter_path_mode::root_path)
                             {
-                                jsonpath_evaluator<Json,const Json&,detail::VoidPathConstructor<Json>> evaluator(buffer_line,buffer_column);
+                                jsonpath_evaluator<Json,JsonReference,detail::VoidPathConstructor<Json>> evaluator(buffer_line,buffer_column);
                                 evaluator.evaluate(resources, root, buffer);
                                 auto result = evaluator.get_values();
                                 if (result.size() > 0)
                                 {
-                                    push_token(token<Json,JsonPointer>(value_term<Json,JsonPointer>(std::move(result[0]))));
+                                    push_token(token<Json,JsonReference>(value_term<Json,JsonReference>(std::move(result[0]))));
                                 }
-                                push_token(token<Json,JsonPointer>(rparen_arg));
+                                push_token(token<Json,JsonReference>(rparen_arg));
                             }
                             else
                             {
-                                push_token(token<Json,JsonPointer>(path_term<Json,JsonPointer>(buffer, buffer_line, buffer_column)));
+                                push_token(token<Json,JsonReference>(path_term<Json,JsonReference>(buffer, buffer_line, buffer_column)));
                             }
                             path_mode_stack_.pop_back();
                         }
                         else
                         {
-                            push_token(token<Json,JsonPointer>(path_term<Json,JsonPointer>(buffer, buffer_line, buffer_column)));
-                            push_token(token<Json,JsonPointer>(rparen_arg));
+                            push_token(token<Json,JsonReference>(path_term<Json,JsonReference>(buffer, buffer_line, buffer_column)));
+                            push_token(token<Json,JsonReference>(rparen_arg));
                         }
                         buffer.clear();
                         buffer_line = buffer_column = 1;
@@ -2475,7 +2475,7 @@ public:
                                     ++column_;
                                     flags |= std::regex_constants::icase;
                                 }
-                                push_token(token<Json,JsonPointer>(regex_term<Json,JsonPointer>(buffer,flags)));
+                                push_token(token<Json,JsonReference>(regex_term<Json,JsonReference>(buffer,flags)));
                                 buffer.clear();
                                 buffer_line = buffer_column = 1;
                             }
@@ -2502,15 +2502,15 @@ public:
         }
         *end_ptr = p;
 
-        return jsonpath_filter_expr<Json,JsonPointer>(std::move(output_stack_));
+        return jsonpath_filter_expr<Json,JsonReference>(std::move(output_stack_));
     }
 private:
-    static Json unary_not_op(const term<Json,JsonPointer>& a)
+    static Json unary_not_op(const term<Json,JsonReference>& a)
     {
         return a.unary_not();
     }
 
-    static Json unary_minus_op(const term<Json,JsonPointer>& a)
+    static Json unary_minus_op(const term<Json,JsonReference>& a)
     {
         return a.unary_minus();
     }

@@ -88,14 +88,14 @@ Json json_query(const Json& root, const typename Json::string_view_type& path, r
     if (result_t == result_type::value) 
     {
         jsoncons::jsonpath::detail::jsonpath_evaluator<Json,reference,detail::VoidPathConstructor<Json>> evaluator;
-        jsoncons::jsonpath::detail::jsonpath_resources<Json,pointer> resources;
+        jsoncons::jsonpath::detail::jsonpath_resources<Json,reference> resources;
         evaluator.evaluate(resources, root, path);
         return evaluator.get_values();
     }
     else
     {
         jsoncons::jsonpath::detail::jsonpath_evaluator<Json,reference,detail::PathConstructor<Json>> evaluator;
-        jsoncons::jsonpath::detail::jsonpath_resources<Json,pointer> resources;
+        jsoncons::jsonpath::detail::jsonpath_resources<Json,reference> resources;
         evaluator.evaluate(resources, root, path);
         return evaluator.get_normalized_paths();
     }
@@ -108,7 +108,7 @@ void json_replace(Json& root, const typename Json::string_view_type& path, T&& n
     using pointer = typename std::conditional<std::is_const<typename std::remove_reference<reference>::type>::value,typename Json::const_pointer,typename Json::pointer>::type;
 
     jsoncons::jsonpath::detail::jsonpath_evaluator<Json,reference,detail::VoidPathConstructor<Json>> evaluator;
-    jsoncons::jsonpath::detail::jsonpath_resources<Json,pointer> resources;
+    jsoncons::jsonpath::detail::jsonpath_resources<Json,reference> resources;
     evaluator.evaluate(resources, root, path);
     evaluator.replace(std::forward<T>(new_value));
 }
@@ -240,7 +240,7 @@ class jsonpath_evaluator : public ser_context
         virtual ~selector_base()
         {
         }
-        virtual void select(jsonpath_resources<Json,pointer>& resources,
+        virtual void select(jsonpath_resources<Json,reference>& resources,
                             const string_type& path, reference val, node_set& nodes) = 0;
 
         virtual bool is_filter() const
@@ -259,7 +259,7 @@ class jsonpath_evaluator : public ser_context
         {
         }
 
-        void select(jsonpath_resources<Json,pointer>& resources,
+        void select(jsonpath_resources<Json,reference>& resources,
                     const string_type& path, reference val, 
                     node_set& nodes) override
         {
@@ -279,14 +279,14 @@ class jsonpath_evaluator : public ser_context
     class expr_selector final : public selector_base
     {
     private:
-         jsonpath_filter_expr<Json,pointer> result_;
+         jsonpath_filter_expr<Json,reference> result_;
     public:
-        expr_selector(const jsonpath_filter_expr<Json,pointer>& result)
+        expr_selector(const jsonpath_filter_expr<Json,reference>& result)
             : result_(result)
         {
         }
 
-        void select(jsonpath_resources<Json,pointer>& resources,
+        void select(jsonpath_resources<Json,reference>& resources,
                     const string_type& path, reference val, 
                     node_set& nodes) override
         {
@@ -310,9 +310,9 @@ class jsonpath_evaluator : public ser_context
     class filter_selector final : public selector_base
     {
     private:
-         jsonpath_filter_expr<Json,pointer> result_;
+         jsonpath_filter_expr<Json,reference> result_;
     public:
-        filter_selector(const jsonpath_filter_expr<Json,pointer>& result)
+        filter_selector(const jsonpath_filter_expr<Json,reference>& result)
             : result_(result)
         {
         }
@@ -322,7 +322,7 @@ class jsonpath_evaluator : public ser_context
             return true;
         }
 
-        void select(jsonpath_resources<Json,pointer>& resources,
+        void select(jsonpath_resources<Json,reference>& resources,
                     const string_type& path, reference val, 
                     node_set& nodes) override
         {
@@ -359,7 +359,7 @@ class jsonpath_evaluator : public ser_context
         {
         }
 
-        void select(jsonpath_resources<Json,pointer>& resources,
+        void select(jsonpath_resources<Json,reference>& resources,
                     const string_type& path, reference val,
                     node_set& nodes) override
         {
@@ -421,7 +421,7 @@ class jsonpath_evaluator : public ser_context
         {
         }
 
-        void select(jsonpath_resources<Json,pointer>&,
+        void select(jsonpath_resources<Json,reference>&,
                     const string_type& path, reference val,
                     node_set& nodes) override
         {
@@ -471,7 +471,7 @@ class jsonpath_evaluator : public ser_context
         }
     };
 
-    function_table<Json,pointer> functions_;
+    function_table<Json,reference> functions_;
 
     node_set nodes_;
     std::vector<node_set> stack_;
@@ -542,7 +542,7 @@ public:
         return result;
     }
 
-    void call_function(jsonpath_resources<Json,pointer>& resources, const string_type& function_name, std::error_code& ec)
+    void call_function(jsonpath_resources<Json,reference>& resources, const string_type& function_name, std::error_code& ec)
     {
         auto f = functions_.get(function_name, ec);
         if (ec)
@@ -588,7 +588,7 @@ public:
         }
     }
 
-    void evaluate(jsonpath_resources<Json,pointer>& resources, reference root, const string_view_type& path)
+    void evaluate(jsonpath_resources<Json,reference>& resources, reference root, const string_view_type& path)
     {
         std::error_code ec;
         evaluate(resources, root, path.data(), path.length(), ec);
@@ -598,7 +598,7 @@ public:
         }
     }
 
-    void evaluate(jsonpath_resources<Json,pointer>& resources, reference root, const string_view_type& path, std::error_code& ec)
+    void evaluate(jsonpath_resources<Json,reference>& resources, reference root, const string_view_type& path, std::error_code& ec)
     {
         JSONCONS_TRY
         {
@@ -610,7 +610,7 @@ public:
         }
     }
  
-    void evaluate(jsonpath_resources<Json,pointer>& resources,
+    void evaluate(jsonpath_resources<Json,reference>& resources,
                   reference root, 
                   const char_type* path, 
                   std::size_t length,
@@ -1183,7 +1183,7 @@ public:
                             break;
                         case '(':
                         {
-                            jsonpath_filter_parser<Json,pointer> parser(line_,column_);
+                            jsonpath_filter_parser<Json,reference> parser(line_,column_);
                             auto result = parser.parse(resources, root, p_,end_input_,&p_);
                             line_ = parser.line();
                             column_ = parser.column();
@@ -1193,7 +1193,7 @@ public:
                         }
                         case '?':
                         {
-                            jsonpath_filter_parser<Json,pointer> parser(line_,column_);
+                            jsonpath_filter_parser<Json,reference> parser(line_,column_);
                             auto result = parser.parse(resources,root,p_,end_input_,&p_);
                             line_ = parser.line();
                             column_ = parser.column();
@@ -1663,7 +1663,7 @@ public:
         }
     }
 
-    void apply_selectors(jsonpath_resources<Json,pointer>& resources)
+    void apply_selectors(jsonpath_resources<Json,reference>& resources)
     {
         //std::cout << "apply_selectors count: " << selectors_.size() << "\n";
         if (selectors_.size() > 0)
@@ -1681,7 +1681,7 @@ public:
         transfer_nodes();
     }
 
-    void apply_selector(jsonpath_resources<Json,pointer>& resources,
+    void apply_selector(jsonpath_resources<Json,reference>& resources,
                         const string_type& path, 
                         reference val, 
                         selector_base& selector, 

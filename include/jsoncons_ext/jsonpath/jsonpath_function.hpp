@@ -25,15 +25,15 @@ JSONCONS_STRING_LITERAL(prod,'p','r','o','d')
 JSONCONS_STRING_LITERAL(count,'c','o','u','n','t')
 JSONCONS_STRING_LITERAL(tokenize,'t','o','k','e','n','i','z','e')
 
-template <class Json, class JsonPointer>
+template <class Json, class JsonReference>
 class function_table
 {
 public:
+    using pointer = typename std::conditional<std::is_const<typename std::remove_reference<JsonReference>::type>::value,typename Json::const_pointer,typename Json::pointer>::type;
     typedef typename Json::char_type char_type;
     typedef typename Json::char_traits_type char_traits_type;
     typedef std::basic_string<char_type,char_traits_type> string_type;
     typedef typename Json::string_view_type string_view_type;
-    typedef JsonPointer pointer;
     typedef std::vector<pointer> argument_type;
     typedef std::function<Json(const std::vector<argument_type>&, std::error_code&)> function_type;
     typedef std::unordered_map<string_type,function_type> function_dictionary;
